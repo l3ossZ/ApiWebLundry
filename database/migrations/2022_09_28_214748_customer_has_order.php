@@ -13,7 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('customer_has_order',function(Blueprint $table){
+
+        });
     }
 
     /**
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('customer_has_order');
     }
 };
