@@ -13,6 +13,7 @@ return new class extends Migration
             $table->id();
             $table->string('service');
             $table->double('basePrice');
+            $table->timestamps();
         });
     }
 

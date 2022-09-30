@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('cloth_type');
             $table->double('price_per_unit');
             $table->integer('quantity');
+            $table->timestamps();
         });
     }
 

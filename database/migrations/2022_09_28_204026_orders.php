@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Employee;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -32,6 +33,7 @@ return new class extends Migration
             $table->double('total');
             $table->string('status');
             $table->boolean('is_membership_or');
+            $table->foreignIdFor(Employee::class);
 
             $table->softDeletes();
 

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('username');
             $table->string('password');
             $table->double('salary');
-            
+            $table->timestamps();
             $table->softDeletes();
 
         });

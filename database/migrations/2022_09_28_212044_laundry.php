@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('lineId') ;
             $table->time('opentime') ;
             $table->time('closetime') ;
+            $table->timestamps();
         });
     }
 

@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('time') ;
             $table->string('orderId') ;
             $table->string('job');
+            $table->timestamps();
         });
     }
 

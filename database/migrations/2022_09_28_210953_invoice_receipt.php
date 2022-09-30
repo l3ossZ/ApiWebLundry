@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('deli_EMP')->nullable();
             $table->double('total');
             $table->string('pay_method')->nullable();
+            $table->timestamps();
 
             $table->softDeletes();
 

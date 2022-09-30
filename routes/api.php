@@ -3,6 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\EmployeeController;
+use App\Http\Controllers\Api\OrderController as ApiOrderController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,8 +31,13 @@ Route::get('/', function () {
 
 Route::get('/rewards/search', [\App\Http\Controllers\Api\RewardController::class, 'search']);
 Route::get('/reward_codes/search', [\App\Http\Controllers\Api\RewardCodeController::class, 'search']);
+Route::get('/customers/search',[CustomerController::class,'search']);
 Route::apiResource('/rewards', \App\Http\Controllers\Api\RewardController::class);
 Route::apiResource('/reward_codes', \App\Http\Controllers\Api\RewardCodeController::class);
+Route::apiResource('/orders',ApiOrderController::class);
+Route::apiResource('/employees',EmployeeController::class);
+Route::apiResource('/customers',CustomerController::class);
+
 
 Route::group([
     'middleware' => 'api',
