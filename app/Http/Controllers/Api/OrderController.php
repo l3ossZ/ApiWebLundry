@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class OrderController extends Controller
 {
@@ -36,7 +37,31 @@ class OrderController extends Controller
         $order->deli_time=$request->get('deli_time') ?? null;
         $order->pick_ADS=$request->get('pick_ADS');
         $order->deli_ADS=$request->get('deli_ADS');
-        
+        $order->respond_EMP=$request->get('respond_EMP');
+        $order->deli_EMP=$request->get('deli_EMP') ?? null;
+        $order->pay_status=$request->get('pay_status');
+        $order->pay_method=$request->get('pay_method');
+        $order->pick_ser_charge=$request->get('pick_ser_charge') ?? null;
+        $order->deli_ser_charge=$request->get('deli_ser_charge') ?? null;
+        $order->total=$request->get('total');
+        $order->status=$request->get('status');
+        $order->is_membership_or=$request->get('is_membership_or');
+
+        if ($order->save()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Order created with id ' . $order->id,
+                'order_id' =>$order->id
+            ],Response::HTTP_CREATED);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Order create failed'
+        ], Response::HTTP_BAD_REQUEST);
+
+
+
+
     }
 
     /**
@@ -48,6 +73,7 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         //
+        return $order;
     }
 
     /**
@@ -59,7 +85,37 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
+
+        if($request->has('service')) $order->service=$request->get('service');
+        if($request->has('pick_date')) $order->pick_date=$request->get('pick_date');
+        if($request->has('pick_time')) $order->pick_time=$request->get('pick_time');
+        if($request->has('deli_date')) $order->deli_date=$request->get('deli_date');
+        if($request->has('deli_time')) $order->deli_time=$request->get('deli_time');
+        if($request->has('pick_ADS')) $order->pick_ADS=$request->get('pick_ADS');
+        if($request->has('deli_ADS')) $order->deli_ADS=$request->get('deli_ADS');
+        if($request->has('respond_EMP')) $order->respond_EMP=$request->get('respond_EMP');
+        if($request->has('deli_EMP')) $order->deli_EMP=$request->get('deli_EMP');
+        if($request->has('pay_status')) $order->pay_status=$request->get('pay_status');
+        if($request->has('pay_method')) $order->pay_method=$request->get('pay_method');
+        if($request->has('pick_ser_charge')) $order->pick_ser_charge=$request->get('pick_ser_charge');
+        if($request->has('deli_ser_charge')) $order->deli_ser_charge=$request->get('deli_ser_charge') ;
+        if($request->has('total')) $order->total=$request->get('total');
+        if($request->has('status')) $order->status=$request->get('status');
+        if($request->has('is_membership_or')) $order->is_membership_or=$request->get('is_membership_or');
         //
+
+        if ($order->save()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Order updated with id ' . $order->id,
+                'order_id' =>$order->id
+            ],Response::HTTP_OK);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Order update failed'
+        ], Response::HTTP_BAD_REQUEST);
+
     }
 
     /**

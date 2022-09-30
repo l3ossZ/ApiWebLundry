@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('address',function(Blueprint $table){
+        Schema::create('addresses',function(Blueprint $table){
             $table->id();
             $table->string('name');
             $table->string('u_code');
             $table->string('lat')->nullable();
             $table->string('lng')->nullable();
             $table->string('hint')->nullable();
+
+            $table->timestamps();
             $table->softDeletes();
 
 
@@ -34,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('address');
+        Schema::dropIfExists('addresses');
     }
 };

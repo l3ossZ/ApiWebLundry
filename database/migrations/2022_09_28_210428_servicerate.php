@@ -9,7 +9,7 @@ return new class extends Migration
 
     public function up()
     {
-        Schema::create('servicerate',function(Blueprint $table){
+        Schema::create('service_rates',function(Blueprint $table){
             $table->id();
             $table->string('service');
             $table->double('basePrice');
@@ -20,6 +20,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('servicerate');
+        Schema::dropIfExists('service_rates');
     }
 };

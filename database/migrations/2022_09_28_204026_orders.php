@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('status');
             $table->boolean('is_membership_or');
             $table->foreignIdFor(Employee::class);
-
+            
             $table->softDeletes();
 
         });
