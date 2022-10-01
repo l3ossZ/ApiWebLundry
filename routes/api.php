@@ -43,7 +43,7 @@ Route::apiResource('/customers',CustomerController::class);
 Route::apiResource('/address',AddressController::class);
 Route::apiResource('/service-rate',ServiceRateController::class);
 Route::apiResource('/laundry',LaundryController::class);
-Route::apiResource('category',CategoryController::class);
+Route::apiResource('/category',CategoryController::class);
 
 
 Route::group([

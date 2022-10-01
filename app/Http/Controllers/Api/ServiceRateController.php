@@ -58,6 +58,7 @@ class ServiceRateController extends Controller
     public function show(ServiceRate $serviceRate)
     {
         //
+        $category=$serviceRate->category;
         return $serviceRate;
     }
 
@@ -99,5 +100,5 @@ class ServiceRateController extends Controller
         //
     }
 
-    
+
 }
