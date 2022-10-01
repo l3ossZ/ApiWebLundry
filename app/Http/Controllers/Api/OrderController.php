@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClothList;
+use App\Models\Customer;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -33,6 +34,7 @@ class OrderController extends Controller
     {
         $order=new Order();
 
+
         $order->service=$request->get('service');
         $order->pick_date=$request->get('pick_date') ?? null;
         $order->pick_time=$request->get('pick_time') ?? null;
@@ -50,18 +52,24 @@ class OrderController extends Controller
         $order->status=$request->get('status');
         $order->is_membership_or=$request->get('is_membership_or');
         $order->employee_id=$request->get('employee_id');
-
+        $order->cus_phone=$request->get('cus_phone');
 
 
 
 
 
         if ($order->save()) {
+
+            $customer=Customer::where('phone','like','%'.$request->get('cus_phone').'%')->first();
+            $order->customers()->attach($customer->id);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Order created with id ' . $order->id,
                 'order_id' =>$order->id
             ],Response::HTTP_CREATED);
+
+
         }
         return response()->json([
             'success' => false,
@@ -82,6 +90,7 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         //
+        $customer=$order->customers;
         return $order;
     }
 
@@ -139,7 +148,7 @@ class OrderController extends Controller
     }
 
     public function storeClothList(Request $request,Order $order){
-        
+
     }
 
 

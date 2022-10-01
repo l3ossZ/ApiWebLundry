@@ -10,11 +10,12 @@ class Order extends Model
 {
     use HasFactory;
 
-    public function customer(){
-        return $this->belongsTo(Customer::class);
+    public function customers(){
+        return $this->belongsToMany(Customer::class);
     }
 
     public function clothList(){
         return $this->hasMany(ClothList::class);
     }
+
 }

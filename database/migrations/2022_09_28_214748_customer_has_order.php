@@ -15,10 +15,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('customer_has_order',function(Blueprint $table){
+        Schema::create('customer_order',function(Blueprint $table){
             $table->id();
             $table->foreignIdFor(Customer::class);
             $table->foreignIdFor(Order::class);
+            
             $table->timestamps();
             $table->softDeletes();
 

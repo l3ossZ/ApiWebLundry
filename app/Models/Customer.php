@@ -12,12 +12,14 @@ class Customer extends Model
     use HasFactory;
 
     public function order(){
-        return $this->belongsTo(Order::class);
+        return $this->belongsToMany(Order::class);
     }
 
     public function address(){
-        return $this->belongsTo(Address::class);
+        return $this->belongsToMany(Address::class);
     }
-    
+
+
+
 
 }
