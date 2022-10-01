@@ -54,6 +54,8 @@ class OrderController extends Controller
 
 
 
+
+
         if ($order->save()) {
             return response()->json([
                 'success' => true,
@@ -137,8 +139,7 @@ class OrderController extends Controller
     }
 
     public function storeClothList(Request $request,Order $order){
-        $clothList=new ClothList();
-        $clothList->service_rate_id=$request->get('service_rate_id');
+        
     }
 
 
