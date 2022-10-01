@@ -98,4 +98,6 @@ class ServiceRateController extends Controller
     {
         //
     }
+
+    
 }

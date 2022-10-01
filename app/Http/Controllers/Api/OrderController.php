@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClothList;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -30,6 +32,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $order=new Order();
+
         $order->service=$request->get('service');
         $order->pick_date=$request->get('pick_date') ?? null;
         $order->pick_time=$request->get('pick_time') ?? null;
@@ -46,6 +49,10 @@ class OrderController extends Controller
         $order->total=$request->get('total');
         $order->status=$request->get('status');
         $order->is_membership_or=$request->get('is_membership_or');
+        $order->employee_id=$request->get('employee_id');
+
+
+
 
         if ($order->save()) {
             return response()->json([
@@ -128,4 +135,11 @@ class OrderController extends Controller
     {
         //
     }
+
+    public function storeClothList(Request $request,Order $order){
+        $clothList=new ClothList();
+        $clothList->service_rate_id=$request->get('service_rate_id');
+    }
+
+
 }

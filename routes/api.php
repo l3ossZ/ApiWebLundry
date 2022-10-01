@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AddressController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\LaundryController;
@@ -42,6 +43,7 @@ Route::apiResource('/customers',CustomerController::class);
 Route::apiResource('/address',AddressController::class);
 Route::apiResource('/service-rate',ServiceRateController::class);
 Route::apiResource('/laundry',LaundryController::class);
+Route::apiResource('category',CategoryController::class);
 
 
 Route::group([

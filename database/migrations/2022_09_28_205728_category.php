@@ -16,7 +16,7 @@ return new class extends Migration
             // $table ServiceRateID();
             $table->foreignIdFor(ServiceRate::class);
             $table->string('clothType');
-            $table->double('AddOnPrice');
+            $table->double('addOnPrice');
             $table->timestamps();
             $table->softDeletes();
         });

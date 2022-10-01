@@ -13,10 +13,10 @@ return new class extends Migration
            $table->id();
            $table->string('name');
            $table->string('phone')->unique();
-           $table->string('email')->unique();
-           $table->string('pwd')->nullable();
+           $table->string('email')->unique()->nullable()->default(null);
+           $table->string('pwd')->nullable()->default(null);
            $table->boolean('isMembership')->default(false);
-           $table->string('memService')->nullable(null);
+           $table->string('memService')->nullable()->default(null);
            $table->integer('memCredit')->nullable()->default(0) ;
            $table->timestamps();
            $table->softDeletes();
