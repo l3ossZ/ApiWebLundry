@@ -59,6 +59,7 @@ class ServiceRateController extends Controller
     {
         //
         $category=$serviceRate->category;
+        $clothList=$serviceRate->clothLists;
         return $serviceRate;
     }
 

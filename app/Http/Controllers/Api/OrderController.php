@@ -92,7 +92,7 @@ class OrderController extends Controller
     {
         //
         $customer=$order->customers;
-        $clothList=$order->clothList;
+
         return $order;
     }
 
@@ -152,12 +152,18 @@ class OrderController extends Controller
     public function storeClothList(Request $request, Order $order){
         $clothList=new ClothList();
         $clothList->quantity=$request->get('quantity');
+        $clothList->order_id=$order->id;
+        $service_rate=ServiceRate::where('id','like','%'.$request->get('service_rate_id').'%')->first();
+        $clothList->service_rate_id=$service_rate->id;
+        $order->clothLists()->save($clothList);
+        $service_rate->clothLists()->save($clothList);
+
         if($clothList->save()){
-            $order->clothLists()->save($clothList);
-            $clothList->order()->save($order);
-            $service_rate=ServiceRate::where('id','like','%'.$request->get('service_rate_id').'%')->first();
-            $service_rate->clothLists()->save($clothList);
+
+
             return response()->json([
+
+
 
                 'success' => true,
                 'message' => 'Cloth List created with id ' . $clothList->id,
