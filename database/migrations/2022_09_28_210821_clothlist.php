@@ -11,10 +11,11 @@ return new class extends Migration
 
     public function up()
     {
-        Schema::create('clothlist',function(Blueprint $table){
+        Schema::create('cloth_lists',function(Blueprint $table){
             $table->id();
             $table->foreignIdFor(Order::class);
             $table->foreignIdFor(ServiceRate::class);
+            // $table->string('service_rate_id');
             // order 1 --- M ClothList
             // $table->orId() ;
             // serviceRate 1 -- M ClothList

@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(ServiceRateSeeder::class);
         $this->call(CustomerSeeder::class);
+        $this->call(CategorySeeder::class);
     }
 }

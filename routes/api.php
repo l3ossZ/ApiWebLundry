@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AddressController;
+use App\Http\Controllers\Api\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -31,7 +32,8 @@ Route::get('/', function () {
         'version' => '1.0.0'
     ];
 });
-
+Route::post('/orders/{order}/cloth-list',[OrderController::class,'storeClothList']);
+Route::get('/customers/searchE',[CustomerController::class, 'searchEmail']);
 Route::get('/rewards/search', [\App\Http\Controllers\Api\RewardController::class, 'search']);
 Route::get('/reward_codes/search', [\App\Http\Controllers\Api\RewardCodeController::class, 'search']);
 Route::get('/customers/search',[CustomerController::class,'search']);
@@ -44,6 +46,8 @@ Route::apiResource('/address',AddressController::class);
 Route::apiResource('/service-rate',ServiceRateController::class);
 Route::apiResource('/laundry',LaundryController::class);
 Route::apiResource('/category',CategoryController::class);
+
+
 
 
 Route::group([

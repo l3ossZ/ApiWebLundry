@@ -115,4 +115,13 @@ class CustomerController extends Controller
                          ->get();
         return $customers;
     }
+
+    public function searchEmail(Request $request) {
+        $q = $request->query('q');
+        $sort = $request->query('sort') ?? 'asc';
+        $customers = Customer::where('email', 'LIKE', "%{$q}%")
+                         ->orderBy('email', $sort)
+                         ->get();
+        return $customers;
+    }
 }

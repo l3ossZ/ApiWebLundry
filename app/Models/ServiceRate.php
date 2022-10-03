@@ -9,7 +9,7 @@ class ServiceRate extends Model
 {
     use HasFactory;
 
-    public function clothList(){
+    public function clothLists(){
         return $this->hasMany(ClothList::class);
     }
 
@@ -17,5 +17,5 @@ class ServiceRate extends Model
         return $this->hasMany(Category::class);
     }
 
-    
+
 }

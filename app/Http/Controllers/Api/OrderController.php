@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ClothList;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\ServiceRate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -91,6 +92,7 @@ class OrderController extends Controller
     {
         //
         $customer=$order->customers;
+        $clothList=$order->clothList;
         return $order;
     }
 
@@ -147,7 +149,29 @@ class OrderController extends Controller
         //
     }
 
-    public function storeClothList(Request $request,Order $order){
+    public function storeClothList(Request $request, Order $order){
+        $clothList=new ClothList();
+        $clothList->quantity=$request->get('quantity');
+        if($clothList->save()){
+            $order->clothLists()->save($clothList);
+            $clothList->order()->save($order);
+            $service_rate=ServiceRate::where('id','like','%'.$request->get('service_rate_id').'%')->first();
+            $service_rate->clothLists()->save($clothList);
+            return response()->json([
+
+                'success' => true,
+                'message' => 'Cloth List created with id ' . $clothList->id,
+                'cloth_list_id' =>$clothList->id
+            ],Response::HTTP_CREATED);
+        }
+        return response()->json([
+
+            'success' => false,
+            'message' => 'Cloth List created failed'
+        ], Response::HTTP_BAD_REQUEST);
+
+
+
 
     }
 
