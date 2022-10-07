@@ -4,11 +4,17 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class EmployeeController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +23,8 @@ class EmployeeController extends Controller
     public function index()
     {
         $employees=Employee::get();
-        return $employees;
+        $user=auth()->user();
+        return [$employees,$user];
     }
 
     /**
@@ -33,9 +40,19 @@ class EmployeeController extends Controller
         $employee->phone=$request->get('phone');
         $employee->email=$request->get('email');
         $employee->role=$request->get('role');
-        $employee->username=$request->get('username');
-        $employee->password=$request->get('password');
+        // $employee->username=$request->get('username');
+        $employee->password=bcrypt($request->get('password'));
         $employee->salary=$request->get('salary');
+
+        $user=new User();
+        $user->name=$request->get('name');
+        $user->phone=$request->get('phone');
+        $user->email=$request->get('email');
+        $user->role=$request->get('role');
+        $user->realrole="employee";
+        $user->password=bcrypt($request->get('password'));
+        $user->save();
+
 
         if ($employee->save()) {
             return response()->json([
@@ -72,14 +89,24 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, Employee $employee)
     {
+        $user=User::where('email','like','%'.$employee->email.'%')->first();
 
         if($request->has('name')) $employee->name=$request->get('name');
         if($request->has('phone')) $employee->phone=$request->get('phone');
         if($request->has('email')) $employee->email=$request->get('email');
         if($request->has('role')) $employee->role=$request->get('role');
-        if($request->has('username')) $employee->username=$request->get('username');
-        if($request->has('password')) $employee->password=$request->get('password');
+        // if($request->has('username')) $employee->username=$request->get('username');
+        if($request->has('password')) $employee->password=bcrypt($request->get('password'));
         if($request->has('salary')) $employee->salary=$request->get('salary');
+
+
+        $user->name=$request->get('name');
+        $user->phone=$request->get('phone');
+        $user->email=$request->get('email');
+        $user->role=$request->get('role');
+        $user->realrole="employee";
+        $user->password=bcrypt($request->get('password'));
+        $user->save();
 
         if ($employee->save()) {
             return response()->json([

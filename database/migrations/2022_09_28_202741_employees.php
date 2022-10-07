@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('employees',function(Blueprint $table){
             $table->id();
             $table->string('name');
-            $table->string('phone');
+            $table->string('phone')->unique();
             $table->string('email')->unique();
             $table->string('role');
-            $table->string('username');
+            // $table->string('username');
             $table->string('password');
-            $table->double('salary');
+            $table->double('salary')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

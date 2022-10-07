@@ -3,19 +3,59 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
+use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    /**
-     * Create a new AuthController instance.
-     *
-     * @return void
-     */
+    // public function register(Request $request){
+    //     $fields=$request->validate([
+    //         'name'=>'required|string',
+    //         'email'=>'required|string|unique:users,email',
+    //         'password'=>'required|string|confirmed',
+    //         'role'=>'required|string',
+    //         'phone'=>'required|string|unique:users,phone',
+    //         'realrole'=>'reqired|string'
+
+    //     ]);
+
+    //     if($fields['realrole']=='employee'){
+    //         $employee=new Employee();
+    //         $employee->name=$fields['name'];
+    //         $employee->email=$fields['email'];
+    //         $employee->password=$fields['password'];
+    //         $employee->role=$fields['role'];
+    //         $employee->phone=$fields['phone'];
+
+    //     }
+
+    //     $user=User::create([
+    //         'name'=>$fields['name'],
+    //         'email'=>$fields['email'],
+    //         'password'=>bcrypt($fields['password']),
+    //         'role'=>$fields['role'],
+    //         'phone'=>$fields['phone'],
+    //         'realrole'=>$fields['realrole']
+    //     ]);
+
+    //     $token=$user->createToken('mylaundry')->plainTextToken;
+    //     $response=[
+    //         'user'=>$user,
+    //         'token'=>$token
+    //     ];
+
+    //     return response($response,201);
+    // }
+//     /**
+    //  * Create a new AuthController instance.
+    //  *
+    //  * @return void
+    //  */
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login']]);
@@ -47,11 +87,11 @@ class AuthController extends Controller
     /**
      * Get the authenticated User.
      *
-     * @return UserResource
+     *
      */
     public function me()
     {
-        return new UserResource( auth()->user());
+        return auth()->user();
     }
 
     /**
@@ -91,4 +131,31 @@ class AuthController extends Controller
 //            'user' => new UserResource(auth()->user())
         ]);
     }
+
+    public function register(Request $request){
+        $user=User::create([
+            'name'=>$request->get('name'),
+            'phone'=>$request->get('phone'),
+            'email'=>$request->get('email'),
+            'password'=>Hash::make($request->get('password')),
+            'role'=>$request->get('role'),
+            'realrole'=>$request->get('realrole')
+        ]);
+
+        if($request->get('realrole')=='employee'){
+            $employee=new Employee();
+            $employee->name=$request->get('name');
+            $employee->phone=$request->get('phone');
+            $employee->email=$request->get('email');
+            $employee->password=Hash::make($request->get('password'));
+            $employee->role=$request->get('role');
+        }
+
+        $response=[
+                    'user'=>$user
+                ];
+
+        return response($response,201);
+    }
+
 }

@@ -23,15 +23,16 @@ use App\Http\Controllers\Api\ServiceRateController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::get('/', function () {
     return [
         'version' => '1.0.0'
     ];
 });
+
 Route::post('/orders/{order}/cloth-list',[OrderController::class,'storeClothList']);
 Route::get('/customers/searchE',[CustomerController::class, 'searchEmail']);
 Route::get('/rewards/search', [\App\Http\Controllers\Api\RewardController::class, 'search']);
@@ -40,13 +41,12 @@ Route::get('/customers/search',[CustomerController::class,'search']);
 Route::apiResource('/rewards', \App\Http\Controllers\Api\RewardController::class);
 Route::apiResource('/reward_codes', \App\Http\Controllers\Api\RewardCodeController::class);
 Route::apiResource('/orders',ApiOrderController::class);
-Route::apiResource('/employees',EmployeeController::class);
 Route::apiResource('/customers',CustomerController::class);
 Route::apiResource('/address',AddressController::class);
 Route::apiResource('/service-rate',ServiceRateController::class);
 Route::apiResource('/laundry',LaundryController::class);
 Route::apiResource('/category',CategoryController::class);
-
+Route::apiResource('/employees',EmployeeController::class);
 
 
 
@@ -59,3 +59,6 @@ Route::group([
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
 });
+// Route::group(['middleware'=>'auth:sanctum'],function(){
+
+// });
