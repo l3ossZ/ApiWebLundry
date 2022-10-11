@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class DeliveryTimeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -33,7 +37,7 @@ class DeliveryTimeController extends Controller
         $deliveryTime->time=$request->get('time');
         $deliveryTime->orderId=$request->get('orderId');
         $deliveryTime->job=$request->get('job');
-        
+
     }
 
     /**
