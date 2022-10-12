@@ -100,12 +100,13 @@ class EmployeeController extends Controller
         if($request->has('salary')) $employee->salary=$request->get('salary');
 
 
-        $user->name=$request->get('name');
-        $user->phone=$request->get('phone');
-        $user->email=$request->get('email');
-        $user->role=$request->get('role');
+
+        if($request->has('name')) $user->name=$request->get('name');
+        if($request->has('phone')) $user->phone=$request->get('phone');
+        if($request->has('email')) $user->email=$request->get('email');
+        if($request->has('role')) $user->role=$request->get('role');
         $user->realrole="employee";
-        $user->password=bcrypt($request->get('password'));
+        if($request->has('password')) $user->password=bcrypt($request->get('password'));
         $user->save();
 
         if ($employee->save()) {

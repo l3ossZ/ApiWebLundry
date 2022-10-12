@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('invoice_receipt',function(Blueprint $table){
+        Schema::create('invoice_receipts',function(Blueprint $table){
             $table->id();
-            $table->timestamp('timestamp');
+            // $table->timestamp('timestamp');
             $table->string('EMP_name');
             $table->string('CS_id');
             $table->string('CS_name');

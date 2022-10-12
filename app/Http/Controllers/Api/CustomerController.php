@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -44,6 +45,15 @@ class CustomerController extends Controller
         $customer->memService=$request->get('memService')??null;
         $customer->memCredit=$request->get('memCredit')??null;
 
+        $user=new User();
+        $user->name=$request->get('name');
+        $user->phone=$request->get('phone');
+        $user->email=$request->get('email');
+        // $user->role=$request->get('role');
+        $user->realrole="customer";
+        $user->password=bcrypt($request->get('pwd'));
+        $user->save();
+
         if ($customer->save()) {
             return response()->json([
                 'success' => true,
@@ -79,13 +89,25 @@ class CustomerController extends Controller
     public function update(Request $request, Customer $customer)
     {
         //
+        $user=User::where('name','like','%'.$customer->name.'%')->first();
+
         if($request->has('name')) $customer->name=$request->get('name');
         if($request->has('phone')) $customer->phone=$request->get('phone');
         if($request->has('email')) $customer->email=$request->get('email');
-        if($request->has('pwd')) $customer->pwd=$request->get('password');
+        if($request->has('pwd')) $customer->pwd=$request->get('pwd');
         if($request->has('isMembership')) $customer->isMembership=$request->get('isMembership');
         if($request->has('memService')) $customer->memService=$request->get('memService');
         if($request->has('memCredit')) $customer->memCredit=$request->get('memCredit');
+
+
+        if($request->has('name')) $user->name=$request->get('name');
+        if($request->has('phone')) $user->phone=$request->get('phone');
+        if($request->has('email')) $user->email=$request->get('email');
+        $user->realrole="customer";
+        if($request->has('pwd')) $user->password=bcrypt($request->get('pwd'));
+        $user->save();
+
+
 
         if ($customer->save()) {
             return response()->json([

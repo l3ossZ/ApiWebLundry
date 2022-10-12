@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\ClothList;
 use App\Models\Customer;
+use App\Models\Invoice_receipt;
 use App\Models\Order;
 use App\Models\ServiceRate;
 use Carbon\Carbon;
@@ -184,6 +185,13 @@ class OrderController extends Controller
 
 
     }
+
+    // public function makeInvoice(Request $request, Order $order){
+    //     $inv=new Invoice_receipt();
+    //     $inv->EMP_name=$order->respond_EMP;
+    //     $inv->CS_id=$order->customer->id;
+
+    // }
 
 
 }
