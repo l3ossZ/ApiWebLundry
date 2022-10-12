@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('u_code');
-            $table->string('lat')->nullable();
-            $table->string('lng')->nullable();
-            $table->string('hint')->nullable();
-
+            $table->string('lat')->nullable()->default(null);
+            $table->string('lng')->nullable()->default(null);
+            $table->string('hint')->nullable()->default(null);
+            $table->string('contact')->nullable()->default(null);
             $table->timestamps();
             $table->softDeletes();
 

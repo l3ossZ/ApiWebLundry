@@ -40,6 +40,7 @@ class AddressController extends Controller
         $address->lat=$request->has('lat') ? $request->get('lat') : null;
         $address->lng=$request->has('lng') ?  $request->get('lng') : null;
         $address->hint=$request->has('hint') ?  $request->get('hint') : null;
+        $address->contact=$request->has('contact') ? $request->get('contact') : null;
 
         if ($address->save()) {
             return response()->json([
@@ -78,9 +79,10 @@ class AddressController extends Controller
     {
         if($request->has('name')) $address->name=$request->get('name');
         if($request->has('u_code')) $address->u_code=$request->get('u_code');
-        if($request->has('lat')) $address->lat=$request->get('lat')??null;
-        if($request->has('lng')) $address->lng=$request->get('lng')??null;
-        if($request->has('hint')) $address->hint=$request->get('hint')??null;
+        if($request->has('lat')) $address->lat=$request->get('lat');
+        if($request->has('lng')) $address->lng=$request->get('lng');
+        if($request->has('hint')) $address->hint=$request->get('hint');
+        if($request->has('contact')) $address->contact=$request->get('contact');
 
         if ($address->save()) {
             return response()->json([
