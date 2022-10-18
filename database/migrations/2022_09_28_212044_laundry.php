@@ -11,15 +11,16 @@ return new class extends Migration
     {
         Schema::create('laundries',function(Blueprint $table){
             $table->id();
-            $table->string('name') ;
+            $table->string('name')->unique() ;
             $table->string('phone')->unique() ;
-            $table->string('password')->unique();
             $table->string('owner') ;
             $table->string('email')->unique() ;
-            $table->string('address');
-            $table->string('lineId') ;
-            $table->string('opentime') ;
-            $table->string('closetime') ;
+            $table->string('address')->unique()->nullable()->default(null);
+            $table->string('lineId')->nullable() ;
+            $table->string('workDay')->default("0111111") ;
+            $table->string('opentime')->default("9:00") ;
+            $table->string('closetime')->default("19:00") ;
+            $table->double('numOfWork')->default(3);
             $table->timestamps();
         });
     }
