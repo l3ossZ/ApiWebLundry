@@ -144,10 +144,7 @@ class AuthController extends Controller
             'role' => 'required',
             'realrole' => 'required'
         ]);
-//        $user=User::create([
-//            $validator->validated(),
-//
-//        ]);
+
 
         $user = new User();
         $user->name=$request->get('name');
@@ -155,7 +152,7 @@ class AuthController extends Controller
         $user->email=$request->get('email');
         $user->password=Hash::make($request->get('password'));
         $user->role=$request->get('role');
-        $user->realrole=$request->get('role');
+        $user->realrole=$request->get('realrole');
         $user->save();
 
 
@@ -190,8 +187,6 @@ class AuthController extends Controller
             $customer->memCredit=0;
             $customer->save() ;
         }
-
-
 
 
         $response=[

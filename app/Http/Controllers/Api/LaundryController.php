@@ -37,22 +37,26 @@ class LaundryController extends Controller
         //
         $laundry=new Laundry();
 
-        $laundry->name=$request->get('name');
-        $laundry->phone=$request->get('phone');
-        $laundry->owner=$request->get('owner');
-        $laundry->email=$request->get('email');
-        $laundry->address=$request->get('address');
-        $laundry->lineId=$request->get('lineId');
-        $laundry->opentime=$request->get('opentime');
-        $laundry->closetime=$request->get('closetime');
-
         $user=new User();
         $user->name=$request->get('name');
         $user->phone=$request->get('phone');
         $user->email=$request->get('email');
-        $user->realrole="owner";
+        $user->realrole="OWNER";
         $user->password=bcrypt($request->get('password'));
         $user->save();
+
+        $user=User::where('phone','like','%'.$request->get('phone').'%')->first();
+
+        $laundry->name=$request->get('name');
+        $laundry->phone=$request->get('phone');
+//        $laundry->owner=$request->get();
+        $laundry->owner=$user->id ;
+        $laundry->email=$request->get('email');
+//        $laundry->address=$request->get('address');
+//        $laundry->lineId=$request->get('lineId');
+//        $laundry->opentime=$request->get('opentime');
+//        $laundry->closetime=$request->get('closetime');
+
 
         if ($laundry->save()) {
             return response()->json([
@@ -65,8 +69,6 @@ class LaundryController extends Controller
             'success' => false,
             'message' => 'Laundry creation failed'
         ], Response::HTTP_BAD_REQUEST);
-
-
 
     }
 
