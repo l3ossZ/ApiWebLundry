@@ -34,9 +34,5 @@ class ServiceRateSeeder extends Seeder
         $service_rate->service="รีด";
         $service_rate->basePrice=10;
         $service_rate->save();
-
-
-
-
     }
 }

@@ -40,18 +40,17 @@ class EmployeeController extends Controller
         $employee->phone=$request->get('phone');
         $employee->email=$request->get('email');
         $employee->role=$request->get('role');
-        // $employee->username=$request->get('username');
         $employee->password=bcrypt($request->get('password'));
         $employee->salary=$request->get('salary');
 
-        $user=new User();
-        $user->name=$request->get('name');
-        $user->phone=$request->get('phone');
-        $user->email=$request->get('email');
-        $user->role=$request->get('role');
-        $user->realrole="employee";
-        $user->password=bcrypt($request->get('password'));
-        $user->save();
+//        $user=new User();
+//        $user->name=$request->get('name');
+//        $user->phone=$request->get('phone');
+//        $user->email=$request->get('email');
+//        $user->role=$request->get('role');
+//        $user->realrole="employee";
+//        $user->password=bcrypt($request->get('password'));
+//        $user->save();
 
 
         if ($employee->save()) {
@@ -105,7 +104,8 @@ class EmployeeController extends Controller
         if($request->has('phone')) $user->phone=$request->get('phone');
         if($request->has('email')) $user->email=$request->get('email');
         if($request->has('role')) $user->role=$request->get('role');
-        $user->realrole="employee";
+        if($request->has('role')) $user->role=$request->get('realrole');
+//        $user->realrole="employee";
         if($request->has('password')) $user->password=bcrypt($request->get('password'));
         $user->save();
 

@@ -9,7 +9,7 @@ return new class extends Migration
 
     public function up()
     {
-        Schema::create('deliverytime',function(Blueprint $table){
+        Schema::create('delivery-time',function(Blueprint $table){
             $table->date('date')->primary();
             $table->string('time') ;
             $table->string('orderId') ;
@@ -21,6 +21,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('deliverytime');
+        Schema::dropIfExists('delivery-time');
     }
 };

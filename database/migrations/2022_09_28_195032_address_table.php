@@ -23,8 +23,6 @@ return new class extends Migration
             $table->string('contact')->nullable()->default(null);
             $table->timestamps();
             $table->softDeletes();
-
-
         });
         //
     }

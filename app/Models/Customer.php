@@ -19,6 +19,9 @@ class Customer extends Model
         return $this->belongsToMany(Address::class);
     }
 
+    public function serviceRate(){
+        return $this->belongsTo(ServiceRate::class);
+    }
 
 
 

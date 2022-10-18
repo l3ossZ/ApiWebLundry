@@ -18,33 +18,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
         $this->call(ServiceRateSeeder::class);
         $this->call(CustomerSeeder::class);
         $this->call(CategorySeeder::class);
-
-        $user= new User();
-        $user->name="admin";
-        $user->email="admin@example.com";
-        $user->password=Hash::make("adminpass");
-        $user->phone='0123456789';
-        $user->role="เจ้าของร้าน";
-        $user->realrole="employee";
-        $user->save();
-
-        $employee=new Employee();
-        $employee->name="admin";
-        $employee->email="admin@example.com";
-        $employee->password=Hash::make("adminpass");
-        $employee->role="เจ้าของร้าน";
-        $employee->phone="0123456789";
-        $employee->save();
-        // $user->setRememberToken("1234567890");
-
+        $this->call(EmployeeSeeder::class);
+        $this->call(AddressSeeder::class);
+        $this->call(OrderSeeder::class);
     }
 }

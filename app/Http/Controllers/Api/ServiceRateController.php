@@ -53,12 +53,7 @@ class ServiceRateController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ServiceRate  $serviceRate
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(ServiceRate $serviceRate)
     {
         //
@@ -67,13 +62,7 @@ class ServiceRateController extends Controller
         return $serviceRate;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ServiceRate  $serviceRate
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, ServiceRate $serviceRate)
     {
         //

@@ -15,6 +15,14 @@ class User extends Authenticatable implements JWTSubject
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
+     * @var mixed|string
+     */
+    /**
+     * @var mixed|string
+     */
+
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>

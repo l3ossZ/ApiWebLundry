@@ -46,7 +46,6 @@ class AddressController extends Controller
         $address->contact=$request->has('contact') ? $request->get('contact') : null;
 
         if ($address->save()) {
-
             $customer=Customer::where('phone','like','%'.$userPhone.'%')->first();
             $address->customers()->attach($customer->id);
             return response()->json([

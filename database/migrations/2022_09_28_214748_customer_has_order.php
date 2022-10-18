@@ -19,11 +19,8 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Customer::class);
             $table->foreignIdFor(Order::class);
-            
             $table->timestamps();
             $table->softDeletes();
-
-
         });
     }
 

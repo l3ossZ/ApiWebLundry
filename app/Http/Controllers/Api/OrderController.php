@@ -43,15 +43,14 @@ class OrderController extends Controller
 
 
         $order->service=$request->get('service');
-        $order->name="ORS"."-".(string)random_int(100000,999999);
+        $order->name="ORS"."-".(string)random_int(10000,99999);
         $order->pick_date=$request->get('pick_date') ?? null;
         $order->pick_time=$request->get('pick_time') ?? null;
         $order->deli_date=$request->get('deli_date') ?? null;
         $order->deli_time=$request->get('deli_time') ?? null;
-        $order->pick_ADS=$request->get('pick_ADS');
-        $order->deli_ADS=$request->get('deli_ADS');
-        $order->respond_EMP=$request->get('respond_EMP');
-        $order->deli_EMP=$request->get('deli_EMP') ?? null;
+        $order->deli_ADS=$request->get('address');
+        $order->respond_EMP=$request->get('responder');
+        $order->deli_EMP=$request->get('deliver') ?? null;
         $order->pay_status=$request->get('pay_status');
         $order->pay_method=$request->get('pay_method');
         $order->pick_ser_charge=$request->get('pick_ser_charge') ?? null;
@@ -60,7 +59,6 @@ class OrderController extends Controller
         $order->status=$request->get('status');
         $order->is_membership_or=$request->get('is_membership_or');
         $order->employee_id=$request->get('employee_id');
-        $order->cus_phone=$request->get('cus_phone');
 
 
 

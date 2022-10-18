@@ -19,12 +19,10 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->string('email')->unique();
             $table->string('role');
-            // $table->string('username');
             $table->string('password');
             $table->double('salary')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 

@@ -23,10 +23,9 @@ return new class extends Migration
             $table->string('pick_time')->nullable()->default(null);
             $table->date('deli_date')->nullable()->default(null);
             $table->string('deli_time')->nullable()->default(null);
-            $table->string('pick_ADS');
-            $table->string('deli_ADS');
-            $table->string('respond_EMP');
-            $table->timestamp('deli_EMP')->nullable()->default(null);
+            $table->string('address');
+            $table->string('responder');
+            $table->timestamp('deliver')->nullable()->default(null);
             $table->boolean('pay_status')->default(false);
             $table->string('pay_method')->default("เงินสด");
             $table->double('pick_ser_charge')->nullable()->default(null);
@@ -34,10 +33,8 @@ return new class extends Migration
             $table->double('total')->default(0);
             $table->string('status')->default("Order Add");
             $table->boolean('is_membership_or')->default(false);
-            $table->string('cus_phone');
             $table->foreignIdFor(Employee::class);
             $table->softDeletes();
-
         });
     }
 
