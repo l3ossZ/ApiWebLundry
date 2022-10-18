@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -134,61 +135,99 @@ class AuthController extends Controller
 
 
 
-//    public function register(Request $request){
-//        $user=User::create([
-//            'name'=>$request->get('name'),
-//            'phone'=>$request->get('phone'),
-//            'email'=>$request->get('email'),
-//            'password'=>Hash::make($request->get('password')),
-//            'role'=>$request->get('role'),
-//            'realrole'=>$request->get('realrole')
-//        ]);
-//
-//        if($request->get('realrole')=='EMPLOYEE'){
-//            $employee=new Employee();
-//            $employee->name=$request->get('name');
-//            $employee->phone=$request->get('phone');
-//            $employee->email=$request->get('email');
-//            $employee->password=Hash::make($request->get('password'));
-//            $employee->role=$request->get('role');
-//        }
-//
-//        if($request->get('realrole')=='OWNER'){
-//            $employee=new Employee();
-//            $employee->name=$request->get('name');
-//            $employee->phone=$request->get('phone');
-//            $employee->email=$request->get('email');
-//            $employee->password=Hash::make($request->get('password'));
-//            $employee->role=$request->get('role');
-//        }
-//
-//        $response=[
-//                    'user'=>$user
-//                ];
-//
-//        return response($response,201);
-//    }
-
-    public function register(Request $request) {
+    public function register(Request $request){
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:users',
-            'phone' => 'required|numeric|digits:10',
+            'email' => 'required|string|email|max:100|unique:users,email',
+            'phone' => 'required|numeric|digits:10|unique:users,phone]',
             'password' => 'required|string|min:6',
             'role' => 'required',
-            'realrole' => 'required',
+            'realrole' => 'required'
         ]);
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+//        $user=User::create([
+//            $validator->validated(),
+//
+//        ]);
+
+        $user = new User();
+        $user->name=$request->get('name');
+        $user->phone=$request->get('phone');
+        $user->email=$request->get('email');
+        $user->password=Hash::make($request->get('password'));
+        $user->role=$request->get('role');
+        $user->realrole=$request->get('role');
+        $user->save();
+
+
+        if($request->get('realrole')=='EMPLOYEE'){
+            $employee=new Employee();
+            $employee->name=$request->get('name');
+            $employee->phone=$request->get('phone');
+            $employee->email=$request->get('email');
+            $employee->password=Hash::make($request->get('password'));
+            $employee->role=$request->get('role');
+            $employee->save();
         }
-        $user = User::create(array_merge(
-            $validator->validated(),
-            ['password' => bcrypt($request->password)]
-        ));
-        return response()->json([
-            'message' => 'User successfully registered',
-            'user' => $user
-        ], 201);
+
+        else if($request->get('realrole')=='OWNER'){
+            $employee=new Employee();
+            $employee->name=$request->get('name');
+            $employee->phone=$request->get('phone');
+            $employee->email=$request->get('email');
+            $employee->password=Hash::make($request->get('password'));
+            $employee->role=$request->get('role');
+            $employee->save();
+        }
+
+        else if($request->get('realrole')=='CUSTOMER'){
+            $customer = new Customer();
+            $customer->name=$request->get('name');
+            $customer->phone=$request->get('phone');
+            $customer->email=$request->get('email');
+            $customer->pwd=Hash::make($request->get('password'));
+            $customer->isMembership=false;
+            $customer->memService=null;
+            $customer->memCredit=0;
+            $customer->save() ;
+        }
+
+
+
+
+        $response=[
+                    'user'=>$user
+                ];
+
+        return response($response,201);
     }
+
+//    public function register(Request $request) {
+////        $validator = Validator::make($request->all(), [
+////            'name' => 'required|string|between:2,100',
+////            'email' => 'required|string|email|max:100',
+////            'phone' => 'required|numeric|digits:10',
+////            'password' => 'required|string|min:6',
+////            'role' => 'required',
+////            'realrole' => 'required'
+////        ]);
+////        if($validator->fails()){
+////            return response()->json($validator->errors()->toJson(), 400);
+////        }
+//        $user = User::create(array_merge(
+////            $validator->validated(),
+//
+////            'name'=>$request->get('name'),
+////            'phone'=>$request->get('phone'),
+////            'email'=>$request->get('email'),
+////            'role'=>$request->get('role'),
+////            'realrole'=>$request->get('realrole'),
+////            'password' => bcrypt($request->password)]
+//
+//        ));
+//        return response()->json([
+//            'message' => 'User successfully registered',
+//            'user' => $user
+//        ], 201);
+//    }
 
 }
