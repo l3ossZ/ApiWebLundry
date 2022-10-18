@@ -15,10 +15,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('customer_has_address',function(Blueprint $table){
+        Schema::create('address_customer',function(Blueprint $table){
             $table->id();
-            $table->foreignIdFor(Customer::class);
             $table->foreignIdFor(Address::class);
+            $table->foreignIdFor(Customer::class);
             $table->timestamps();
             $table->softDeletes();
 

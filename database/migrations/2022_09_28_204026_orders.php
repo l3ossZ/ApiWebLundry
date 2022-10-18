@@ -18,6 +18,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('service');
+            $table->string('name')->unique();
             $table->date('pick_date')->nullable()->default(null);
             $table->string('pick_time')->nullable()->default(null);
             $table->date('deli_date')->nullable()->default(null);

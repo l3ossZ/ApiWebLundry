@@ -4,15 +4,16 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Laundry;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class LaundryController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:api',['except'=>['store']]);
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -44,6 +45,14 @@ class LaundryController extends Controller
         $laundry->lineId=$request->get('lineId');
         $laundry->opentime=$request->get('opentime');
         $laundry->closetime=$request->get('closetime');
+
+        $user=new User();
+        $user->name=$request->get('name');
+        $user->phone=$request->get('phone');
+        $user->email=$request->get('email');
+        $user->realrole="owner";
+        $user->password=bcrypt($request->get('password'));
+        $user->save();
 
         if ($laundry->save()) {
             return response()->json([

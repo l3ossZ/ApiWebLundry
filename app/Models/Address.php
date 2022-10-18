@@ -9,7 +9,7 @@ class Address extends Model
 {
     use HasFactory;
 
-    public function customer(){
+    public function customers(){
         return $this->belongsToMany(Customer::class);
     }
 

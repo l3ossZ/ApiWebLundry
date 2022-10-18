@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -10,10 +11,10 @@ use Illuminate\Http\Response;
 
 class CustomerController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:api',['except'=>['store']]);
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +23,10 @@ class CustomerController extends Controller
     public function index()
 
     {
+
+
         $customer=Customer::get();
+        // return CustomerResource::collection($customer);
         return $customer;
         //
     }
@@ -76,6 +80,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
+        $order=$customer->order;
         return $customer;
     }
 
@@ -88,6 +93,7 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
+
         //
         $user=User::where('name','like','%'.$customer->name.'%')->first();
 

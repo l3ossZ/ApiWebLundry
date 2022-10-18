@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,3 +25,4 @@ Route::get('/posts', function () {
 Route::post('/posts', function () {
     return 'route/web.php posts store';
 });
+// Route::post('/login',[LoginController::class,'login']);

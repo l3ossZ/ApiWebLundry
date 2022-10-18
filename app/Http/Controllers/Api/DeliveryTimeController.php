@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\DeliveryTime;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class DeliveryTimeController extends Controller
 {
@@ -38,7 +39,20 @@ class DeliveryTimeController extends Controller
         $deliveryTime->orderId=$request->get('orderId');
         $deliveryTime->job=$request->get('job');
 
+        if ($deliveryTime->save()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Delivery Time created with id ' . $deliveryTime->id
+
+            ],Response::HTTP_OK);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Delivery Time update failed'
+        ], Response::HTTP_BAD_REQUEST);
     }
+
+
 
     /**
      * Display the specified resource.
@@ -49,6 +63,7 @@ class DeliveryTimeController extends Controller
     public function show(DeliveryTime $deliveryTime)
     {
         //
+        return $deliveryTime;
     }
 
     /**
@@ -61,6 +76,22 @@ class DeliveryTimeController extends Controller
     public function update(Request $request, DeliveryTime $deliveryTime)
     {
         //
+        $deliveryTime->date=$request->get('date');
+        $deliveryTime->time=$request->get('time');
+        $deliveryTime->orderId=$request->get('orderId');
+        $deliveryTime->job=$request->get('job');
+
+        if ($deliveryTime->save()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Delivery Time updated with id ' . $deliveryTime->id
+
+            ],Response::HTTP_OK);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Delivery Time update failed'
+        ], Response::HTTP_BAD_REQUEST);
     }
 
     /**

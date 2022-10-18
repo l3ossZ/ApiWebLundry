@@ -4,15 +4,17 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Address;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class AddressController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:api');
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -34,6 +36,7 @@ class AddressController extends Controller
     public function store(Request $request)
     {
         //
+        $userPhone=Auth::user()->phone;
         $address=new Address();
         $address->name=$request->get('name');
         $address->u_code=$request->get('u_code');
@@ -43,6 +46,9 @@ class AddressController extends Controller
         $address->contact=$request->has('contact') ? $request->get('contact') : null;
 
         if ($address->save()) {
+
+            $customer=Customer::where('phone','like','%'.$userPhone.'%')->first();
+            $address->customers()->attach($customer->id);
             return response()->json([
                 'success' => true,
                 'message' => 'Address created with id ' . $address->id,
@@ -64,7 +70,8 @@ class AddressController extends Controller
      */
     public function show(Address $address)
     {
-        //
+        $customers=$address->customer();
+
         return $address;
     }
 
