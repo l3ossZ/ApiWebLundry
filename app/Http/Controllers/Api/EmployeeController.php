@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -23,8 +24,7 @@ class EmployeeController extends Controller
     public function index()
     {
         $employees=Employee::get();
-        $user=auth()->user();
-        return [$employees,$user];
+        return EmployeeResource::collection($employees);
     }
 
     /**
