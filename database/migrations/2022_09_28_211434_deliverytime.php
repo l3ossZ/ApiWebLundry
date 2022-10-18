@@ -9,7 +9,7 @@ return new class extends Migration
 
     public function up()
     {
-        Schema::create('delivery-time',function(Blueprint $table){
+        Schema::create('delivery_times',function(Blueprint $table){
             $table->date('date')->primary();
             $table->string('time') ;
             $table->string('orderId') ;
