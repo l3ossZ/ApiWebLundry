@@ -11,10 +11,10 @@ use Illuminate\Http\Response;
 
 class CustomerController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth:api',['except'=>['store']]);
-    // }
+    public function __construct()
+    {
+        $this->middleware('auth:api',['except'=>['store']]);
+    }
     /**
      * Display a listing of the resource.
      *
