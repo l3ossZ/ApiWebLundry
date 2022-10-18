@@ -81,7 +81,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        $orders=$customer->orders;
+        $orders=$customer->orders->id;
         // $address=$customer->address;
 
         return $customer;

@@ -69,7 +69,7 @@ class AddressController extends Controller
      */
     public function show(Address $address)
     {
-        $customers=$address->customer();
+        $customers=$address->customers;
 
         return $address;
     }
