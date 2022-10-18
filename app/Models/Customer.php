@@ -11,7 +11,7 @@ class Customer extends Model
 {
     use HasFactory;
 
-    public function order(){
+    public function orders(){
         return $this->belongsToMany(Order::class);
     }
 

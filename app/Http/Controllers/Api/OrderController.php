@@ -48,9 +48,9 @@ class OrderController extends Controller
         $order->pick_time=$request->get('pick_time') ?? null;
         $order->deli_date=$request->get('deli_date') ?? null;
         $order->deli_time=$request->get('deli_time') ?? null;
-        $order->deli_ADS=$request->get('address');
-        $order->respond_EMP=$request->get('responder');
-        $order->deli_EMP=$request->get('deliver') ?? null;
+        $order->address=$request->get('address');
+        $order->responder=$request->get('responder');
+        $order->deliver=$request->get('deliver') ?? null;
         $order->pay_status=$request->get('pay_status');
         $order->pay_method=$request->get('pay_method');
         $order->pick_ser_charge=$request->get('pick_ser_charge') ?? null;
@@ -59,6 +59,7 @@ class OrderController extends Controller
         $order->status=$request->get('status');
         $order->is_membership_or=$request->get('is_membership_or');
         $order->employee_id=$request->get('employee_id');
+        $order->cus_phone=$request->get('cus_phone');
 
 
 
@@ -67,7 +68,10 @@ class OrderController extends Controller
         if ($order->save()) {
 
             $customer=Customer::where('phone','like','%'.$request->get('cus_phone').'%')->first();
+            // $new_order=Order::where('cus_phone','like','%'.$request->get('cus_phone').'%')->first();
+            // $customer->orders()->attach($new_order->id);
             $order->customers()->attach($customer->id);
+
 
             return response()->json([
                 'success' => true,

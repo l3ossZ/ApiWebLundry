@@ -33,6 +33,7 @@ return new class extends Migration
             $table->double('total')->default(0);
             $table->string('status')->default("Order Add");
             $table->boolean('is_membership_or')->default(false);
+            $table->string('cus_phone');
             $table->foreignIdFor(Employee::class);
             $table->softDeletes();
         });

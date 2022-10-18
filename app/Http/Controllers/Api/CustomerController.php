@@ -27,8 +27,8 @@ class CustomerController extends Controller
 
 
         $customer=Customer::get();
-        // return CustomerResource::collection($customer);
-        return $customer;
+        return CustomerResource::collection($customer);
+        // return $customer;
         //
     }
 
@@ -81,7 +81,9 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        $order=$customer->order;
+        $orders=$customer->orders;
+        // $address=$customer->address;
+
         return $customer;
     }
 

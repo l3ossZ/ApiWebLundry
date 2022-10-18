@@ -119,5 +119,5 @@ class CategoryController extends Controller
             'message' => "Category {$clothType} delete failed"
         ], Response::HTTP_BAD_REQUEST);
     }
-
+    
 }
