@@ -76,6 +76,7 @@ class DeliveryTimeController extends Controller
     public function update(Request $request, DeliveryTime $deliveryTime)
     {
         //
+
         $deliveryTime->date=$request->get('date');
         $deliveryTime->time=$request->get('time');
         $deliveryTime->orderId=$request->get('orderId');

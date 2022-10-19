@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use App\Models\Laundry;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -44,6 +45,15 @@ class LaundryController extends Controller
         $user->realrole="OWNER";
         $user->password=bcrypt($request->get('password'));
         $user->save();
+
+        $employee=new Employee();
+        $employee->name=$request->get('ownerName');
+        $employee->phone=$request->get('phone');
+        $employee->email=$request->get('email');
+        $employee->role="OWNER";
+        $employee->password=bcrypt($request->get('password'));
+        $employee->save() ;
+
 
         $user=User::where('phone','like','%'.$request->get('phone').'%')->first();
 
