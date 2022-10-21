@@ -13,18 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('addresses',function(Blueprint $table){
+        Schema::create('member_packages',function(Blueprint $table){
             $table->id();
-            $table->string('name')->nullable()->default(null);
-            $table->string('u_code')->unique();
-            $table->double('lat')->nullable()->default(null);
-            $table->double('lng')->nullable()->default(null);
-            $table->string('hint')->nullable()->default(null);
-            $table->string('contact')->nullable()->default(null);
+            $table->string('service');
+            $table->integer('quantity');
+            $table->double('price');
             $table->timestamps();
             $table->softDeletes();
+
         });
-        //
     }
 
     /**
@@ -34,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('addresses');
+        Schema::dropIfExists('memberpackages');
     }
 };

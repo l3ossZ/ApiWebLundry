@@ -42,15 +42,20 @@ class EmployeeController extends Controller
         $employee->role=$request->get('role');
         $employee->password=bcrypt($request->get('password'));
         $employee->salary=$request->get('salary');
+        $employee->address=$request->get('address');
+        $employee->ID_Card=$request->get('ID_Card');
+        $employee->bank_account_number=$request->get('bank_account_number');
+        $employee->bank_name=$request->get('bank_name');
 
-//        $user=new User();
-//        $user->name=$request->get('name');
-//        $user->phone=$request->get('phone');
-//        $user->email=$request->get('email');
-//        $user->role=$request->get('role');
-//        $user->realrole="employee";
-//        $user->password=bcrypt($request->get('password'));
-//        $user->save();
+
+       $user=new User();
+       $user->name=$request->get('name');
+       $user->phone=$request->get('phone');
+       $user->email=$request->get('email');
+       $user->role=$request->get('role');
+       $user->realrole="EMPLOYEE";
+       $user->password=bcrypt($request->get('password'));
+       $user->save();
 
 
         if ($employee->save()) {
@@ -97,7 +102,10 @@ class EmployeeController extends Controller
         // if($request->has('username')) $employee->username=$request->get('username');
         if($request->has('password')) $employee->password=bcrypt($request->get('password'));
         if($request->has('salary')) $employee->salary=$request->get('salary');
-
+        if($request->has('address')) $employee->address=$request->get('address');
+        if($request->has('ID_Card')) $employee->ID_Card=$request->get('ID_Card');
+        if($request->has('bank_account_number')) $employee->bank_account_number=$request->get('bank_account_number');
+        if($request->has('bank_name')) $employee->bank_name=$request->get('bank_name');
 
 
         if($request->has('name')) $user->name=$request->get('name');
@@ -131,16 +139,17 @@ class EmployeeController extends Controller
     public function destroy(Employee $employee)
     {
         //
-        $name=$employee->name;
+        $phone=$employee->phone;
+        $user=User::where('phone','like','%'.$phone.'%')->first()->delete();
         if($employee->delete()){
             return response()->json([
                 'success' => true,
-                'message' => "Employee {$name} has been deleted"
+                'message' => "Employee {$phone} has been deleted"
             ], Response::HTTP_OK);
         }
         return response()->json([
             'success' => false,
-            'message' => "Employee {$name} delete failed"
+            'message' => "Employee {$phone} delete failed"
         ], Response::HTTP_BAD_REQUEST);
     }
 }

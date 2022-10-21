@@ -12,4 +12,8 @@ class Category extends Model
     public function serviceRate(){
         return $this->belongsTo(ServiceRate::class);
     }
+
+    // public function clothLists(){
+    //     return $this->belongsTo(ClothList::class);
+    // }
 }

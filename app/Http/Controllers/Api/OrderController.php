@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\ClothList;
 use App\Models\Customer;
+use App\Models\Employee;
 use App\Models\Invoice_receipt;
 use App\Models\Order;
 use App\Models\ServiceRate;
@@ -101,6 +102,8 @@ class OrderController extends Controller
     {
         //
         $customer=$order->customers;
+        $clothList=$order->clothLists;
+        // $service_rate=$order->
 
         return $order;
     }
@@ -128,7 +131,6 @@ class OrderController extends Controller
         if($request->has('pay_method')) $order->pay_method=$request->get('pay_method');
         if($request->has('pick_ser_charge')) $order->pick_ser_charge=$request->get('pick_ser_charge');
         if($request->has('deli_ser_charge')) $order->deli_ser_charge=$request->get('deli_ser_charge') ;
-        if($request->has('total')) $order->total=$request->get('total');
         if($request->has('status')) $order->status=$request->get('status');
         if($request->has('is_membership_or')) $order->is_membership_or=$request->get('is_membership_or');
         //
@@ -219,10 +221,6 @@ class OrderController extends Controller
     //         'message' => 'Invoice Receipt create failed'
     //     ], Response::HTTP_BAD_REQUEST);
 
-
-
-
-
     // }
 
     public function storeWithPhone(Request $request)
@@ -231,16 +229,15 @@ class OrderController extends Controller
 
         $order=new Order();
 
-        $order->name="ORA"."-".(string)random_int(100000,999999);
+        $order->name="ORA"."-".(string)random_int(10000,99999);
         $order->service=$request->get('service');
         $order->pick_date=$request->get('pick_date') ?? null;
         $order->pick_time=$request->get('pick_time') ?? null;
         $order->deli_date=$request->get('deli_date') ?? null;
         $order->deli_time=$request->get('deli_time') ?? null;
-        $order->pick_ADS=$request->get('pick_ADS');
-        $order->deli_ADS=$request->get('deli_ADS');
-        $order->respond_EMP=$request->get('respond_EMP');
-        $order->deli_EMP=$request->get('deli_EMP') ?? null;
+        $order->address=$request->get('address');
+        $order->responder=$request->get('responder');
+        $order->deliver=$request->get('deliver') ?? null;
         $order->pay_status=$request->get('pay_status');
         $order->pay_method=$request->get('pay_method');
         $order->pick_ser_charge=$request->get('pick_ser_charge') ?? null;
@@ -250,10 +247,7 @@ class OrderController extends Controller
         $order->is_membership_or=$request->get('is_membership_or');
         $order->employee_id=$request->get('employee_id');
         $order->cus_phone=$request->get('cus_phone');
-
-
-
-
+        
 
         if ($order->save()) {
 
@@ -273,9 +267,39 @@ class OrderController extends Controller
             'message' => 'Order create failed'
         ], Response::HTTP_BAD_REQUEST);
 
+    }
 
+    public function generateQr(Order $order){
+        $pp = new \KS\PromptPay();
+        $owner=Employee::where('role','like','OWNER')->first();
 
+        //Generate PromptPay Payload
+        $target = $owner->phone;
+        echo $pp->generatePayload($target);
+        //00020101021129370016A000000677010111011300668999999995802TH53037646304FE29
 
+        //Generate PromptPay Payload With Amount
+        $target = $owner->phone;
+        $amount = $order->total;
+        echo $pp->generatePayload($target, $amount);
+        //00020101021229370016A000000677010111011300668999999995802TH53037645406420.006304CF9E
+
+        //Generate QR Code PNG file
+        // $target = '1-2345-67890-12-3';
+        // $savePath = '/tmp/qrcode.png';
+        // $pp->generateQrCode($savePath, $target);
+
+        //Generate QR Code With Amount
+        // $amount = $order->total;
+        // $pp->generateQrCode($savePath, $target, $amount);
+
+        // //Set QR Code Size Pixel
+        // $width = 1000;
+        // $pp->generateQrCode($savePath, $target, $amount, $width);
+
+        return response()->json([
+            $pp
+        ]);
     }
 
 

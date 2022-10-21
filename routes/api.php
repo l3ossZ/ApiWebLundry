@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AddressController;
+use App\Http\Controllers\Api\MemberPackageController;
 use App\Http\Controllers\Api\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +55,7 @@ Route::apiResource('/employees',EmployeeController::class);
 Route::apiResource('/delivery-time',DeliveryTimeController::class);
 Route::apiResource('/invoice-receipt',InvoiceReceiptController::class);
 Route::apiResource('/customer_has_address',CustomerHasAddressController::class);
+Route::apiResource('/member-package',MemberPackageController::class);
 
 
 

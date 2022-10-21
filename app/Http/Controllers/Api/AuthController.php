@@ -163,6 +163,11 @@ class AuthController extends Controller
             $employee->email=$request->get('email');
             $employee->password=Hash::make($request->get('password'));
             $employee->role=$request->get('role');
+            $employee->salary=$request->get('salary');
+            $employee->address=$request->get('address');
+            $employee->ID_Card=$request->get('ID_Card');
+            $employee->bank_account_number=$request->get('bank_account_number');
+            $employee->bank_name=$request->get('bank_name');
             $employee->save();
         }
 

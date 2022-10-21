@@ -20,7 +20,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('role');
             $table->string('password');
-            $table->double('salary')->nullable();
+            $table->double('salary')->nullable()->default(0);
+            $table->string('address');
+            $table->string('ID_Card')->unique();
+            $table->string('bank_account_number')->unique();
+            $table->string('bank_name');
             $table->timestamps();
             $table->softDeletes();
         });

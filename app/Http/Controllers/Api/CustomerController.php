@@ -14,7 +14,7 @@ class CustomerController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api',['except'=>['store']]);
+        $this->middleware('auth:api');
     }
     /**
      * Display a listing of the resource.
@@ -82,7 +82,7 @@ class CustomerController extends Controller
     public function show(Customer $customer)
     {
 
-        $address=$customer->address;
+        // $address=$customer->address;
         return $customer;
     }
 
@@ -95,7 +95,6 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-
         //
         $user=User::where('name','like','%'.$customer->name.'%')->first();
 
@@ -106,8 +105,6 @@ class CustomerController extends Controller
         if($request->has('isMembership')) $customer->isMembership=$request->get('isMembership');
         if($request->has('memService')) $customer->memService=$request->get('memService');
         if($request->has('memCredit')) $customer->memCredit=$request->get('memCredit');
-
-
         if($request->has('name')) $user->name=$request->get('name');
         if($request->has('phone')) $user->phone=$request->get('phone');
         if($request->has('email')) $user->email=$request->get('email');

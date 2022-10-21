@@ -23,6 +23,10 @@ class Customer extends Model
         return $this->belongsTo(ServiceRate::class);
     }
 
+    // public function scopeActive(){
+    //     return
+    // }
+
 
 
 }

@@ -15,4 +15,9 @@ class ClothList extends Model
     public function order(){
         return $this->belongsTo(Order::class);
     }
+
+    // public function categories(){
+    //     return $this->hasMany(Category::class);
+    // }
+
 }
