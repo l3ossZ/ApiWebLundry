@@ -24,12 +24,12 @@ class LaundrySeeder extends Seeder
         $user->password=Hash::make("password");
         $user->role="OWNER";
         $user->realrole="OWNER";
-        $user->phone="0123456789";
+        $user->phone="0624816611";
         $user->save() ;
 
         $employee = new Employee();
         $employee->name="Owner Name";
-        $employee->phone="0123456789";
+        $employee->phone="0624816611";
         $employee->email="owner@mail.com";
         $employee->role="OWNER";
         $employee->address="21 ทรายทองนิเวศน์ ซอย 5 ท่าทราย อำเภอเมืองนนทบุรี นนทบุรี 11000";
