@@ -53,6 +53,9 @@ class LaundryController extends Controller
         $employee->address=$request->get('ownerAddress');
         $employee->role="OWNER";
         $employee->password=bcrypt($request->get('password'));
+        $employee->ID_Card=$request->get("ownerIdCard");
+        $employee->bank_account_number=$request->get("ownerBankNum");
+        $employee->bank_name=$request->get("ownerBankName");
         $employee->save() ;
 
 
