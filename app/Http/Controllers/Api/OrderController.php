@@ -171,15 +171,11 @@ class OrderController extends Controller
         $order->total=$order->total+(($service_rate_price+$category_addOn_price)*$request->get('quantity'));
 
         // $clothList->service_rate_id=$service_rate->id;
-
         if($clothList->save()){
             $order->clothLists()->save($clothList);
             $order->save();
 
             return response()->json([
-
-
-
                 'success' => true,
                 'message' => 'Cloth List created with id ' . $clothList->id,
                 'cloth_list_id' =>$clothList->id
@@ -190,8 +186,64 @@ class OrderController extends Controller
             'success' => false,
             'message' => 'Cloth List created failed'
         ], Response::HTTP_BAD_REQUEST);
+    }
 
+    public function deleteClothList(Order $order,ClothList $clothList){
+        $service=ServiceRate::where('service','like','%'.$clothList->service.'%')->first();
+        $service_rate_price=$service->basePrice;
+        $category=Category::where('clothType','like','%'.$clothList->category.'%')->where('service_rate_id','like','%'.$service->id.'%')->first();
+        $category_addOn_price=$category->addOnPrice;
+        $order->total=$order->total-(($service_rate_price+$category_addOn_price)*$clothList->quantity);
+        $order->save();
+        $id=$clothList->id;
+        if($clothList->delete()){
+            return response()->json([
+                'success'=>'true',
+                'message'=>'cloth list id : ' . $id . 'delete success'
+            ],Response::HTTP_OK);
+        }
+        return response()->json([
+            'success'=> 'false',
+            'message'=>'cloth list id : ' . $id . 'delete failed'
+        ],Response::HTTP_BAD_REQUEST);
 
+    }
+
+    public function editClothList(Request $request,Order $order,ClothList $clothList){
+        $service=ServiceRate::where('service','like','%'.$clothList->service.'%')->first();
+        $service_rate_price=$service->basePrice;
+        $category=Category::where('clothType','like','%'.$clothList->category.'%')->where('service_rate_id','like','%'.$service->id.'%')->first();
+        $category_addOn_price=$category->addOnPrice;
+        $qty=$clothList->quantity;
+        $order->total=$order->total-(($service_rate_price+$category_addOn_price)*$qty);
+        $order->save();
+
+        if($request->has('category')) $clothList->category=$request->get('category');
+        if($request->has('quantity')) $clothList->quantity=$request->get('quantity');
+        if($request->has('service')) $clothList->service=$request->get('service');
+
+        if($request->has('service')) $service=ServiceRate::where('service','like','%'.$request->get('service').'%')->first();
+        $service_rate_price=$service->basePrice;
+        if($request->has('category')) $category=Category::where('clothType','like','%'.$request->get('category').'%')->where('service_rate_id','like','%'.$service->id.'%')->first();
+        $category_addOn_price=$category->addOnPrice;
+        if($request->has('quantity')) $qty=$request->get('quantity');
+        $order->total=$order->total+(($service_rate_price+$category_addOn_price)*$qty);
+
+        if($clothList->save()){
+            $order->clothLists()->save($clothList);
+            $order->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Cloth List updated with id ' . $clothList->id,
+                'cloth_list_id' =>$clothList->id
+            ],Response::HTTP_OK);
+        }
+        return response()->json([
+
+            'success' => false,
+            'message' => 'Cloth List updated failed'
+        ], Response::HTTP_BAD_REQUEST);
 
 
     }
@@ -304,6 +356,8 @@ class OrderController extends Controller
             $pp
         ]);
     }
+
+
 
 
 
