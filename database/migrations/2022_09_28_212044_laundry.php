@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('opentime')->default("9:00") ;
             $table->string('closetime')->default("19:00") ;
             $table->double('numOfWork')->default(3);
+            $table->string('status')->default("close");
             $table->timestamps();
         });
     }
