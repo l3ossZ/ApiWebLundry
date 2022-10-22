@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\ClothList;
 use App\Models\Customer;
 use App\Models\Employee;
@@ -42,7 +43,6 @@ class OrderController extends Controller
     {
         $order=new Order();
 
-
         $order->service=$request->get('service');
         $order->name="ORS"."-".(string)random_int(10000,99999);
         $order->pick_date=$request->get('pick_date') ?? null;
@@ -52,16 +52,14 @@ class OrderController extends Controller
         $order->address=$request->get('address');
         $order->responder=$request->get('responder');
         $order->deliver=$request->get('deliver') ?? null;
-        $order->pay_status=$request->get('pay_status');
-        $order->pay_method=$request->get('pay_method');
+        $order->pay_method=$request->get('pay_method') ?? "เงินสด";
         $order->pick_ser_charge=$request->get('pick_ser_charge') ?? null;
         $order->deli_ser_charge=$request->get('deli_ser_charge') ?? null;
-        $order->total=$request->get('total');
-        $order->status=$request->get('status');
-        $order->is_membership_or=$request->get('is_membership_or');
-        $order->employee_id=$request->get('employee_id');
+        $order->is_membership_or=$request->get('is_membership_or') ?? false;
         $order->cus_phone=$request->get('cus_phone');
 
+        $employee=Employee::where('name','like','%'.$request->get('responder').'%')->first();
+        $order->employee_id=$employee->id;
 
 
 
@@ -100,10 +98,8 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
-        $customer=$order->customers;
+
         $clothList=$order->clothLists;
-        // $service_rate=$order->
 
         return $order;
     }
@@ -118,21 +114,23 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
 
+
         if($request->has('service')) $order->service=$request->get('service');
-        if($request->has('pick_date')) $order->pick_date=$request->get('pick_date');
-        if($request->has('pick_time')) $order->pick_time=$request->get('pick_time');
-        if($request->has('deli_date')) $order->deli_date=$request->get('deli_date');
-        if($request->has('deli_time')) $order->deli_time=$request->get('deli_time');
-        if($request->has('pick_ADS')) $order->pick_ADS=$request->get('pick_ADS');
-        if($request->has('deli_ADS')) $order->deli_ADS=$request->get('deli_ADS');
-        if($request->has('respond_EMP')) $order->respond_EMP=$request->get('respond_EMP');
-        if($request->has('deli_EMP')) $order->deli_EMP=$request->get('deli_EMP');
+        if($request->has('pick_date')) $order->pick_date=$request->get('pick_date') ?? null;
+        if($request->has('pick_time')) $order->pick_time=$request->get('pick_time') ?? null;
+        if($request->has('deli_date')) $order->deli_date=$request->get('deli_date') ?? null;
+        if($request->has('deli_time')) $order->deli_time=$request->get('deli_time') ?? null;
+        if($request->has('address')) $order->address=$request->get('address');
+        if($request->has('responder')) $order->responder=$request->get('responder');
+        if($request->has('deliver')) $order->deliver=$request->get('deliver') ?? null;
         if($request->has('pay_status')) $order->pay_status=$request->get('pay_status');
         if($request->has('pay_method')) $order->pay_method=$request->get('pay_method');
-        if($request->has('pick_ser_charge')) $order->pick_ser_charge=$request->get('pick_ser_charge');
-        if($request->has('deli_ser_charge')) $order->deli_ser_charge=$request->get('deli_ser_charge') ;
+        if($request->has('pick_ser_charge')) $order->pick_ser_charge=$request->get('pick_ser_charge') ?? null;
+        if($request->has('deli_ser_charge')) $order->deli_ser_charge=$request->get('deli_ser_charge') ?? null;
         if($request->has('status')) $order->status=$request->get('status');
         if($request->has('is_membership_or')) $order->is_membership_or=$request->get('is_membership_or');
+        if($request->has('employee_id')) $order->employee_id=$request->get('employee_id');
+        if($request->has('cus_phone')) $order->cus_phone=$request->get('cus_phone');
         //
 
         if ($order->save()) {
@@ -162,15 +160,21 @@ class OrderController extends Controller
 
     public function storeClothList(Request $request, Order $order){
         $clothList=new ClothList();
+        $clothList->category=$request->get('category');
         $clothList->quantity=$request->get('quantity');
+        $clothList->service=$request->get('service');
         $clothList->order_id=$order->id;
-        $service_rate=ServiceRate::where('id','like','%'.$request->get('service_rate_id').'%')->first();
-        $clothList->service_rate_id=$service_rate->id;
-        $order->clothLists()->save($clothList);
-        $service_rate->clothLists()->save($clothList);
+        $service=ServiceRate::where('service','like','%'.$request->get('service').'%')->first();
+        $service_rate_price=$service->basePrice;
+        $category=Category::where('clothType','like','%'.$request->get('category').'%')->where('service_rate_id','like','%'.$service->id.'%')->first();
+        $category_addOn_price=$category->addOnPrice;
+        $order->total=$order->total+(($service_rate_price+$category_addOn_price)*$request->get('quantity'));
+
+        // $clothList->service_rate_id=$service_rate->id;
 
         if($clothList->save()){
-
+            $order->clothLists()->save($clothList);
+            $order->save();
 
             return response()->json([
 
@@ -242,12 +246,11 @@ class OrderController extends Controller
         $order->pay_method=$request->get('pay_method');
         $order->pick_ser_charge=$request->get('pick_ser_charge') ?? null;
         $order->deli_ser_charge=$request->get('deli_ser_charge') ?? null;
-        $order->total=$request->get('total');
         $order->status=$request->get('status');
         $order->is_membership_or=$request->get('is_membership_or');
         $order->employee_id=$request->get('employee_id');
         $order->cus_phone=$request->get('cus_phone');
-        
+
 
         if ($order->save()) {
 

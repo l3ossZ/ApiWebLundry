@@ -13,7 +13,7 @@ class Category extends Model
         return $this->belongsTo(ServiceRate::class);
     }
 
-    // public function clothLists(){
-    //     return $this->belongsTo(ClothList::class);
-    // }
+    public function clothLists(){
+        return $this->belongsTo(ClothList::class);
+    }
 }

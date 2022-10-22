@@ -10,7 +10,7 @@ class ServiceRate extends Model
     use HasFactory;
 
     public function clothLists(){
-        return $this->hasMany(ClothList::class);
+        return $this->belongsTo(ClothList::class);
     }
 
     public function category(){

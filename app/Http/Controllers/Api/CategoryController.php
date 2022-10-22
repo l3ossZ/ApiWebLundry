@@ -119,5 +119,15 @@ class CategoryController extends Controller
             'message' => "Category {$clothType} delete failed"
         ], Response::HTTP_BAD_REQUEST);
     }
-    
+
+    public function getCategoryByService(Request $request){
+        $service=$request->get('service');
+        $service_rate=ServiceRate::where('service','like','%'.$service.'%')->first();
+        $service_rate_id=$service_rate->id;
+        $category=Category::where('service_rate_id','like','%'.$service_rate_id.'%')->get();
+
+        return $category;
+
+    }
+
 }

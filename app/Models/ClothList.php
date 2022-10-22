@@ -10,14 +10,12 @@ class ClothList extends Model
     use HasFactory;
 
     public function serviceRate(){
-        return $this->belongsTo(ServiceRate::class);
+        return $this->hasMany(ServiceRate::class);
     }
     public function order(){
         return $this->belongsTo(Order::class);
     }
 
-    // public function categories(){
-    //     return $this->hasMany(Category::class);
-    // }
+    
 
 }

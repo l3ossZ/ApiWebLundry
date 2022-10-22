@@ -46,6 +46,7 @@ Route::get('/customers/search',[CustomerController::class,'search']);
 Route::put('/laundry/{laundry}/open',[LaundryController::class,'openLaundry']);
 Route::put('laundry/{laundry}/close',[LaundryController::class,'closeLaundry']);
 Route::get('laundry/{laundry}/getStatus',[LaundryController::class,'getStatus']);
+Route::get('category/getCategoryByService',[CategoryController::class,'getCategoryByService']);
 Route::apiResource('/rewards', \App\Http\Controllers\Api\RewardController::class);
 Route::apiResource('/reward_codes', \App\Http\Controllers\Api\RewardCodeController::class);
 Route::apiResource('/orders',ApiOrderController::class);
