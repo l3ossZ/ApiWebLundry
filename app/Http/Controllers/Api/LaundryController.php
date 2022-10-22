@@ -59,7 +59,7 @@ class LaundryController extends Controller
         $employee->save() ;
 
 
-        $user=User::where('phone','like','%'.$request->get('phone').'%')->first();
+        $user=User::where('phone','like','%'.$request->get('ownerPhone').'%')->first();
 
         $laundry->name=$request->get('shopName');
         $laundry->phone=$request->get('shopPhone');
@@ -139,5 +139,43 @@ class LaundryController extends Controller
     public function destroy(Laundry $laundry)
     {
         //
+    }
+
+    public function openLaundry(Laundry $laundry){
+        $laundry->status="open";
+        if($laundry->save()){
+
+            return response()->json([
+                'success'=>true,
+                'message'=> $laundry->status
+            ],Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'success'=>false,
+            'message'=>'open laundry failed'
+        ]);
+    }
+
+    public function closeLaundry(Laundry $laundry){
+        $laundry->status="close";
+        if($laundry->save()){
+
+            return response()->json([
+                'success'=>true,
+                'message'=> $laundry->status
+            ],Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'success'=>false,
+            'message'=>'close laundry failed'
+        ]);
+    }
+
+    public function getStatus(Laundry $laundry){
+        return response()->json([
+            'status'=>$laundry->status
+        ]);
     }
 }
