@@ -39,17 +39,18 @@ class LaundryController extends Controller
         $laundry=new Laundry();
 
         $user=new User();
-        $user->name=$request->get('name');
-        $user->phone=$request->get('phone');
-        $user->email=$request->get('email');
+        $user->name=$request->get('ownerName');
+        $user->phone=$request->get('ownerPhone');
+        $user->email=$request->get('ownerEmail');
         $user->realrole="OWNER";
         $user->password=bcrypt($request->get('password'));
         $user->save();
 
         $employee=new Employee();
         $employee->name=$request->get('ownerName');
-        $employee->phone=$request->get('phone');
-        $employee->email=$request->get('email');
+        $employee->phone=$request->get('ownerPhone');
+        $employee->email=$request->get('ownerEmail');
+        $employee->address=$request->get('ownerAddress');
         $employee->role="OWNER";
         $employee->password=bcrypt($request->get('password'));
         $employee->save() ;
@@ -57,15 +58,15 @@ class LaundryController extends Controller
 
         $user=User::where('phone','like','%'.$request->get('phone').'%')->first();
 
-        $laundry->name=$request->get('name');
-        $laundry->phone=$request->get('phone');
-//        $laundry->owner=$request->get();
+        $laundry->name=$request->get('shopName');
+        $laundry->phone=$request->get('shopPhone');
+        $laundry->address=$request->get('shopAddress');
+        $laundry->lineId=$request->get('lineId');
+        $laundry->workDay=$request->get('workDay');
         $laundry->owner=$user->id ;
-        $laundry->email=$request->get('email');
-//        $laundry->address=$request->get('address');
-//        $laundry->lineId=$request->get('lineId');
-//        $laundry->opentime=$request->get('opentime');
-//        $laundry->closetime=$request->get('closetime');
+        $laundry->email=$request->get('shopEmail');
+        $laundry->opentime=$request->get('opentime');
+        $laundry->closetime=$request->get('closetime');
 
 
         if ($laundry->save()) {
