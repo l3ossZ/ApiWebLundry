@@ -298,10 +298,9 @@ class OrderController extends Controller
         $order->pay_method=$request->get('pay_method');
         $order->pick_ser_charge=$request->get('pick_ser_charge') ?? null;
         $order->deli_ser_charge=$request->get('deli_ser_charge') ?? null;
-        $order->status=$request->get('status');
         $order->is_membership_or=$request->get('is_membership_or');
         $order->employee_id=$request->get('employee_id');
-        $order->cus_phone=$request->get('cus_phone');
+        $order->cus_phone=$userPhone;
 
 
         if ($order->save()) {
@@ -325,36 +324,43 @@ class OrderController extends Controller
     }
 
     public function generateQr(Order $order){
-        $pp = new \KS\PromptPay();
+        // $pp = new \KS\PromptPay();
         $owner=Employee::where('role','like','OWNER')->first();
 
-        //Generate PromptPay Payload
-        $target = $owner->phone;
-        echo $pp->generatePayload($target);
-        //00020101021129370016A000000677010111011300668999999995802TH53037646304FE29
+        // //Generate PromptPay Payload
+        // $target = $owner->phone;
+        // echo $pp->generatePayload($target);
+        // //00020101021129370016A000000677010111011300668999999995802TH53037646304FE29
 
         //Generate PromptPay Payload With Amount
-        $target = $owner->phone;
-        $amount = $order->total;
-        echo $pp->generatePayload($target, $amount);
+        // $target = $owner->phone;
+        // $amount = $order->total;
+        //  echo $pp->generatePayload($target, $amount);
+        // $qr=$pp->generatePayload($target, $amount);
         //00020101021229370016A000000677010111011300668999999995802TH53037645406420.006304CF9E
 
-        //Generate QR Code PNG file
+        // //Generate QR Code PNG file
         // $target = '1-2345-67890-12-3';
         // $savePath = '/tmp/qrcode.png';
         // $pp->generateQrCode($savePath, $target);
 
-        //Generate QR Code With Amount
+        // //Generate QR Code With Amount
         // $amount = $order->total;
         // $pp->generateQrCode($savePath, $target, $amount);
 
-        // //Set QR Code Size Pixel
+        // // //Set QR Code Size Pixel
         // $width = 1000;
         // $pp->generateQrCode($savePath, $target, $amount, $width);
 
+        // return ;
         return response()->json([
-            $pp
+            'phone'=>$owner->phone,
+            'total'=>$order->total
         ]);
+    }
+
+    public function changeStatusInProgress(){
+        
     }
 
 

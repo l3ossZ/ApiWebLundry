@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\LaundryController;
 use App\Http\Controllers\Api\OrderController as ApiOrderController;
 use App\Http\Controllers\Api\ServiceRateController;
 use App\Http\Controllers\Api\CustomerHasAddressController;
+use App\Models\Order;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,7 @@ Route::get('/laundry/{laundry}/getStatus',[LaundryController::class,'getStatus']
 Route::get('/category/getCategoryByService',[CategoryController::class,'getCategoryByService']);
 Route::delete('/orders/{order}/clothList/{clothList}',[OrderController::class,'deleteClothList']);
 Route::put('/orders/{order}/clothList/{clothList}',[OrderController::class,'editClothList']);
+Route::get('/orders/{order}/generateQr',[OrderController::class,'generateQr']);
 Route::apiResource('/rewards', \App\Http\Controllers\Api\RewardController::class);
 Route::apiResource('/reward_codes', \App\Http\Controllers\Api\RewardCodeController::class);
 Route::apiResource('/orders',ApiOrderController::class);
