@@ -17,62 +17,50 @@ class EmployeeSeeder extends Seeder
      */
     public function run()
     {
-        // Owner
-        $employee = new Employee();
-        $employee->name="Owner";
-        $employee->phone="029155058";
-        $employee->email="myluandry@mail.com";
-        $employee->role="OWNER";
-        $employee->password=Hash::make("password");
-        $employee->salary=30000.00;
-        $employee->save();
-
-        $user = new User() ;
-        $user->name="Owner";
-        $user->email="myluandry@mail.com";
-        $user->phone="029155058";
-        $user->role="OWNER";
-        $user->realrole="OWNER";
-        $user->password=Hash::make("password");
-        $user->save();
-
         // Employee
         $employee = new Employee();
-        $employee->name="Employee Test";
-        $employee->phone="0811111111";
+        $employee->name="employee 1";
+        $employee->phone="0811585858";
         $employee->email="employee@mail.com";
         $employee->role="EMPLOYEE";
+        $employee->address="69/12 ทรายทองนิเวศน์ ซอย 7 ท่าทราย อำเภอเมืองนนทบุรี นนทบุรี 11000";
         $employee->password=Hash::make("password");
-        $employee->salary=20000.00;
-        $employee->save();
-
-        $user = new User() ;
-        $user->name="Employee Test";
-        $user->email="employee@mail.com";
-        $user->phone="0811111111";
-        $user->role="EMPLOYEE";
-        $user->realrole="EMPLOYEE";
-        $user->password=Hash::make("password");
-        $user->save();
-
-        // Deliver
-        $employee = new Employee();
-        $employee->name="Deliver Test";
-        $employee->phone="082333444";
-        $employee->email="deliver@mail.com";
-        $employee->role="DELIVER";
-        $employee->password=Hash::make("password");
+        $employee->ID_Card="1105255656891";
+        $employee->bank_account_number="1252585145";
+        $employee->bank_name="กรุงเทพ";
         $employee->salary=18000.00;
         $employee->save();
 
         $user = new User() ;
-        $user->name="Employee Test";
+        $user->name="employee 1";
+        $user->email="employee@mail.com";
+        $user->password=Hash::make("password");
+        $user->role="EMPLOYEE";
+        $user->realrole="EMPLOYEE";
+        $user->phone="0811585858";
+        $user->save() ;
+
+        // Deliver
+        $employee = new Employee();
+        $employee->name="deliver 1";
+        $employee->phone="0816995855";
+        $employee->email="deliver@mail.com";
+        $employee->role="DELIVER";
+        $employee->address="2 ซอย รณสิทธิพิชัย 8/3 ตำบล ตลาดขวัญ อำเภอเมืองนนทบุรี นนทบุรี 11000";
+        $employee->password=Hash::make("password");
+        $employee->ID_Card="5505855859585";
+        $employee->bank_account_number="2593415869";
+        $employee->bank_name="ไทยภาณิข";
+        $employee->salary=18000.00;
+        $employee->save();
+
+        $user = new User() ;
+        $user->name="deliver 1";
         $user->email="deliver@mail.com";
-        $user->phone="082333444";
+        $user->password=Hash::make("password");
         $user->role="DELIVER";
         $user->realrole="DELIVER";
-        $user->password=Hash::make("password");
-        $user->save();
-
+        $user->phone="0816995855";
+        $user->save() ;
     }
 }
