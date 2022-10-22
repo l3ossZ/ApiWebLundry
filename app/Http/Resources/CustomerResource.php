@@ -19,6 +19,9 @@ class CustomerResource extends JsonResource
             'name'=>$this->name,
             'phone'=>$this->phone,
             'email'=>$this->email,
+            'isMembership'=>$this->isMembership,
+            'memService'=>$this->memService,
+            "memCredit"=>$this->memCredit
         ];
     }
 }

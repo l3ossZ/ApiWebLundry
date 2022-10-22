@@ -25,7 +25,7 @@ class CustomerSeeder extends Seeder
         $customer->email="cusnomem@mail.com";
         $customer->pwd=Hash::make("password");
         $customer->isMembership=false;
-        $customer->memService=null;
+        $customer->memService="";
         $customer->memCredit=0;
         $customer->save() ;
 
