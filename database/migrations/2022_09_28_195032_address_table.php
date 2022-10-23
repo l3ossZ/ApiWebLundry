@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('addresses',function(Blueprint $table){
             $table->id();
-            $table->string('name')->nullable()->default(null);
+            $table->string('name')->nullable()->default("-");
             $table->string('u_code')->unique();
-            $table->double('lat')->nullable()->default(null);
-            $table->double('lng')->nullable()->default(null);
-            $table->string('hint')->nullable()->default(null);
-            $table->string('contact')->nullable()->default(null);
+            $table->double('lat')->nullable()->default(0.00);
+            $table->double('lng')->nullable()->default(0.00);
+            $table->string('hint')->nullable()->default("-");
+            $table->string('contact')->nullable()->default("-");
             $table->timestamps();
             $table->softDeletes();
         });

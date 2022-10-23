@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('phone')->unique() ;
             $table->string('owner') ;
             $table->string('email')->unique() ;
-            $table->string('address')->unique()->nullable()->default(null);
+            $table->string('address')->unique()->nullable()->default("-");
             $table->string('lineId')->nullable() ;
             $table->string('workDay')->default("0111111") ;
             $table->string('opentime')->default("09:00") ;
