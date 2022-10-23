@@ -53,8 +53,13 @@ class CustomerController extends Controller
         }
         $customer->pwd=$request->get('pwd');
         $customer->isMembership=$request->get('isMembership')??false;
-        $customer->memService=$request->get('memService')??null;
-        $customer->memCredit=$request->get('memCredit')??null;
+        if($request->get("memService")==null){
+            $customer->memService="-";
+        }
+        else{
+            $customer->memService=$request->get('memService');
+        }
+        $customer->memCredit=$request->get('memCredit')??0;
 
         $user=new User();
         $user->name=$request->get('name');
