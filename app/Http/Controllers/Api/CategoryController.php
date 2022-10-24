@@ -38,7 +38,7 @@ class CategoryController extends Controller
         $category->clothType=$request->get('clothType');
         $category->addOnPrice=$request->get('addOnPrice');
         $category->service_rate_id=$request->get('service_rate_id');
-        ServiceRate::find($category->service_rate_id)->clothList()->save($category);
+        // ServiceRate::find($category->service_rate_id)->clothList()->save($category);
 
 
         if ($category->save()) {
