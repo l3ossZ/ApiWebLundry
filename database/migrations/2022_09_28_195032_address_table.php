@@ -21,6 +21,7 @@ return new class extends Migration
             $table->double('lng')->nullable()->default(0.00);
             $table->string('hint')->nullable()->default("-");
             $table->string('contact')->nullable()->default("-");
+            $table->string('cus_phone');
             $table->timestamps();
             $table->softDeletes();
         });

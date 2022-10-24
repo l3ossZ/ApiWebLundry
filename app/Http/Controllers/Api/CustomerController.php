@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CustomerResource;
+use App\Models\Address;
 use App\Models\Customer;
+use App\Models\Order;
 use App\Models\ServiceRate;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use PHPOpenSourceSaver\JWTAuth\Claims\Custom;
 
 class CustomerController extends Controller
 {
@@ -154,5 +158,27 @@ class CustomerController extends Controller
                          ->orderBy('email', $sort)
                          ->get();
         return $customers;
+    }
+
+    public function getOrderOfCustomer(Customer $customer){
+        $order=Order::where('cus_phone','like','%'.$customer->phone.'%')->get();
+        return $order;
+    }
+
+    public function getOrderOfCustomerAuth(){
+        $phone=Auth::user()->phone;
+        $order=Order::where('cus_phone','like','%'.$phone.'%')->get();
+        return $order;
+    }
+
+    public function getCustomerAddress(Customer $customer){
+        $address=Address::where('cus_phone','like','%'.$customer->phone.'%')->get();
+        return $address;
+    }
+
+    public function getCustomerAddressAuth(){
+        $phone=Auth::user()->phone;
+        $address=Address::where('cus_phone','like','%'.$phone.'%')->get();
+        return $address;
     }
 }
