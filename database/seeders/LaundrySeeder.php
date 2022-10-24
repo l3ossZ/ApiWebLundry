@@ -52,5 +52,6 @@ class LaundrySeeder extends Seeder
         $laundry->closetime="20:00";
         $laundry->numOfwork=3;
         $laundry->status="close";
+        $laundry->save();
     }
 }
