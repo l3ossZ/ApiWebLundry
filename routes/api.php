@@ -53,8 +53,12 @@ Route::get('/customers/getOrderOfCustomerAuth',[CustomerController::class,'getOr
 Route::delete('/orders/{order}/clothList/{clothList}',[OrderController::class,'deleteClothList']);
 Route::put('/orders/{order}/clothList/{clothList}',[OrderController::class,'editClothList']);
 Route::get('/orders/{order}/generateQr',[OrderController::class,'generateQr']);
+Route::put('/orders/{order}/payStatus',[OrderController::class,'payStatus']);
+Route::put('/orders/{order}/nextStatus',[OrderController::class,'nextStatus']);
 Route::get('/customers/{customer}/getCustomerAddress',[CustomerController::class,'getCustomerAddress']);
 Route::get('/customers/getCustomerAddressAuth',[CustomerController::class,'getCustomerAddressAuth']);
+Route::put('/customers/{customer}/addMemberService',[CustomerController::class,'addMemberService']);
+Route::get('laundry/{laundry}/getName',[LaundryController::class,'getName']);
 Route::apiResource('/rewards', \App\Http\Controllers\Api\RewardController::class);
 Route::apiResource('/reward_codes', \App\Http\Controllers\Api\RewardCodeController::class);
 Route::apiResource('/orders',ApiOrderController::class);

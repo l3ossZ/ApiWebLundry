@@ -181,4 +181,16 @@ class CustomerController extends Controller
         $address=Address::where('cus_phone','like','%'.$phone.'%')->get();
         return $address;
     }
+
+    public function addMemberService(Customer $customer,Request $request){
+        $customer->isMembership=true;
+        $customer->memService=$request->get('memService');
+        $customer->memCredit=$request->get('memCredit');
+        $customer->save();
+
+        return response()->json([
+            'success'=>true,
+            'message'=>'add Member Service Complete '.$customer->id
+        ]);
+    }
 }

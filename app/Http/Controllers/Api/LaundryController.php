@@ -178,4 +178,10 @@ class LaundryController extends Controller
             'status'=>$laundry->status
         ]);
     }
+
+    public function getName(Laundry $laundry){
+        return response()->json([
+            'name'=>$laundry->name
+        ]);
+    }
 }

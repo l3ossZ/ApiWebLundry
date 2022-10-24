@@ -50,6 +50,7 @@ class OrderController extends Controller
         $order->deli_date=$request->get('deli_date') ?? null;
         $order->deli_time=$request->get('deli_time') ?? null;
         $order->address=$request->get('address');
+        $order->status="order in";
         $order->responder=$request->get('responder');
         $order->deliver=$request->get('deliver') ?? null;
         $order->pay_method=$request->get('pay_method') ?? "เงินสด";
@@ -359,9 +360,207 @@ class OrderController extends Controller
         ]);
     }
 
-    public function changeStatusInProgress(){
-        
+    public function nextStatus(Order $order){
+        if(str_contains($order->name,'ORS')){
+            if($order->status=='order in'){
+                $order->status="in progress";
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'next status '.$order->status
+                ]);
+            }
+            if($order->status=='in progress'){
+                if($order->address!=null){
+                    $order->status="finish laundry";
+                    $order->save();
+                    return response()->json([
+                        'success'=>true,
+                        'message'=>'next status '.$order->status
+                    ]);
+                }
+            }
+
+            if($order->status=='in progress'){
+                if($order->address==null){
+                    $order->status="ready for pick up";
+                    $order->save();
+                    return response()->json([
+                        'success'=>true,
+                        'message'=>'next status '.$order->status
+                    ]);
+                }
+            }
+
+            if($order->status=='finish laundry'){
+                $order->status="go out delivery";
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'next status '.$order->status
+                ]);
+            }
+
+            if($order->status=='finish laundry'){
+                $order->status="go out delivery";
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'next status '.$order->status
+                ]);
+            }
+
+            if($order->status=='go out delivery'){
+                $order->status="delivery complete";
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'next status '.$order->status
+                ]);
+            }
+
+            if($order->status=='delivery complete'){
+                $order->status="complete";
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'next status '.$order->status
+                ]);
+            }
+
+            if($order->status=='ready for pick up'){
+                $order->status="complete";
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'next status '.$order->status
+                ]);
+            }
+        }
+        if(str_contains($order->name,'ORA')){
+            if($order->status=='Order Add'){
+                $order->status="order-confirm";
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'next status '.$order->status
+                ]);
+            }
+
+            if($order->status=='order-confirm'){
+                $order->status="waiting for pick up";
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'next status '.$order->status
+                ]);
+            }
+
+            if($order->status=='waiting for pick up'){
+                $order->status="pick up";
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'next status '.$order->status
+                ]);
+            }
+
+            if($order->status=='pick up'){
+                $order->status="in progress";
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'next status '.$order->status
+                ]);
+            }
+
+            if($order->status=='in progress'){
+                $order->status="finish laundry";
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'next status '.$order->status
+                ]);
+            }
+
+            if($order->status=='finish laundry'){
+                $order->status="go out delivery";
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'next status '.$order->status
+                ]);
+            }
+
+            if($order->status=='go out delivery'){
+                $order->status="delivery complete";
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'next status '.$order->status
+                ]);
+            }
+
+            if($order->status=='delivery complete'){
+                $order->status="complete";
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'next status '.$order->status
+                ]);
+            }
+        }
     }
+
+    public function payStatus(Order $order){
+        if($order->pay_method=="เงินสด"){
+            $order->pay_status=true;
+            $order->save();
+            return response()->json([
+                'success'=>true,
+                'message'=>'pay complete '.$order->pay_status
+            ]);
+        }
+        if($order->pay_method=="พร้อมเพย์"){
+            $order->pay_status=true;
+            $order->save();
+            return response()->json([
+                'success'=>true,
+                'message'=>'pay complete '.$order->pay_status
+            ]);
+        }
+        if($order->pay_method=="สมาชิก"){
+            $order->is_membership_or=true;
+            $amount=0;
+            $clothLists=$order->clothLists->get();
+            foreach($clothLists as $clothlist){
+                $amount=$amount+$clothlist->quantity;
+            }
+            $customer=Customer::where('phone','like','%'.$order->cus_phone.'%')->first();
+            $memCredit=$customer->memCredit;
+            if($amount<$memCredit){
+                $customer->memCredit=$memCredit-$amount;
+                $order->pay_status=true;
+                $order->save();
+                $customer->save();
+
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'pay complete current credit :'.$customer->memCredit
+                ]);
+            }
+
+            return response()->json([
+                'success'=>false,
+                'message'=>'Credit not enough to pay'
+            ]);
+        }
+
+    }
+
+
+
+
 
 
 

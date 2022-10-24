@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('pick_time')->nullable()->default(null);
             $table->date('deli_date')->nullable()->default(null);
             $table->string('deli_time')->nullable()->default(null);
-            $table->string('address');
+            $table->string('address')->nullable()->default(null);
             $table->string('responder');
             $table->timestamp('deliver')->nullable()->default(null);
             $table->boolean('pay_status')->default(false);
