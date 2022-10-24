@@ -295,12 +295,13 @@ class OrderController extends Controller
         $order->address=$request->get('address');
         $order->responder=$request->get('responder');
         $order->deliver=$request->get('deliver') ?? null;
-        $order->pay_status=$request->get('pay_status');
-        $order->pay_method=$request->get('pay_method');
+        $order->pay_method=$request->get('pay_method') ?? "เงินสด";
         $order->pick_ser_charge=$request->get('pick_ser_charge') ?? null;
         $order->deli_ser_charge=$request->get('deli_ser_charge') ?? null;
-        $order->is_membership_or=$request->get('is_membership_or');
-        $order->employee_id=$request->get('employee_id');
+        // $order->is_membership_or=$request->get('is_membership_or') ?? null;
+
+        $employee=Employee::where('name','like','%'.$request->get('responder').'%')->first();
+        $order->employee_id=$employee->id;
         $order->cus_phone=$userPhone;
 
 
@@ -390,15 +391,6 @@ class OrderController extends Controller
                         'message'=>'next status '.$order->status
                     ]);
                 }
-            }
-
-            if($order->status=='finish laundry'){
-                $order->status="go out delivery";
-                $order->save();
-                return response()->json([
-                    'success'=>true,
-                    'message'=>'next status '.$order->status
-                ]);
             }
 
             if($order->status=='finish laundry'){
@@ -532,23 +524,23 @@ class OrderController extends Controller
         if($order->pay_method=="สมาชิก"){
             $order->is_membership_or=true;
             $amount=0;
-            $clothLists=$order->clothLists->get();
+            $clothLists=$order->clothLists->all();
             foreach($clothLists as $clothlist){
                 $amount=$amount+$clothlist->quantity;
             }
             $customer=Customer::where('phone','like','%'.$order->cus_phone.'%')->first();
             $memCredit=$customer->memCredit;
-            if($amount<$memCredit){
-                $customer->memCredit=$memCredit-$amount;
-                $order->pay_status=true;
-                $order->save();
-                $customer->save();
+                if($amount<$memCredit){
+                    $customer->memCredit=$memCredit-$amount;
+                    $order->pay_status=true;
+                    $order->save();
+                    $customer->save();
 
-                return response()->json([
-                    'success'=>true,
-                    'message'=>'pay complete current credit :'.$customer->memCredit
-                ]);
-            }
+                    return response()->json([
+                        'success'=>true,
+                        'message'=>'pay complete current credit :'.$customer->memCredit
+                    ]);
+                }
 
             return response()->json([
                 'success'=>false,
