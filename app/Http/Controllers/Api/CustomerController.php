@@ -45,7 +45,7 @@ class CustomerController extends Controller
         $customer->name=$request->get('name');
         $customer->phone=$request->get('phone');
         $customer->email=$request->get('email');
-        $customer->email=$request->get('email')??"-";
+        $customer->email=$request->get('email')??null;
         $customer->pwd=$request->get('pwd');
         $customer->isMembership=$request->get('isMembership')??false;
         $customer->memService=$request->get('memService')??"-";
