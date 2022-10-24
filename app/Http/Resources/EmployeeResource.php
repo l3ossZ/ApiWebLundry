@@ -20,8 +20,11 @@ class EmployeeResource extends JsonResource
             'phone'=>$this->phone,
             'email'=>$this->email,
             'role'=>$this->role,
-            'updated_at'=>$this->updated_at,
             'salary'=>$this->salary,
+            'address'=>$this->address,
+            'ID_Card'=>$this->ID_Card,
+            'bank_account_number'=>$this->bank_account_number,
+            'bank_name'=>$this->bank_name,
         ];
     }
 }
