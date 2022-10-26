@@ -13,8 +13,10 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->string('time') ;
-            $table->string('orderId') ;
+            $table->string('orderName')->default("");
             $table->string('job');
+            $table->integer('numOfWork')->default(3);
+            $table->integer('currentOrderWork')->default(0);
             $table->timestamps();
         });
     }
@@ -22,6 +24,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('delivery-time');
+        Schema::dropIfExists('delivery_times');
     }
 };

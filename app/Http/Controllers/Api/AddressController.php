@@ -40,7 +40,7 @@ class AddressController extends Controller
         $address=new Address();
         $address->name=$request->get('name');
         $address->u_code=$request->get('u_code');
-        $address->cus_phone=$userPhone;
+        $address->cus_phone=$request->get('cus_phone')??$userPhone;
         $address->lat=$request->has('lat') ? $request->get('lat') : null;
         $address->lng=$request->has('lng') ?  $request->get('lng') : null;
         $address->hint=$request->has('hint') ?  $request->get('hint') : null;

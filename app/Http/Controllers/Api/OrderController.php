@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\ClothList;
 use App\Models\Customer;
+use App\Models\DeliveryTime;
 use App\Models\Employee;
 use App\Models\Invoice_receipt;
 use App\Models\Order;
@@ -549,6 +550,114 @@ class OrderController extends Controller
         }
 
     }
+    public function storeDeliveryTime(Order $order,Request $request){
+        $order->deli_date=$request->get('deli_date');
+        $order->deli_time=$request->get('deli_time');
+        $deliver=Employee::where('name','like','%'.$request->get('deliver').'%')->first();
+        $order->deliver=$deliver->name;
+        $job="ส่งผ้า";
+
+        $deliveryTime=DeliveryTime::where('date','like','%'.$request->get('deli_date').'%')
+        ->where('time','like','%'.$request->get('deli_time').'%')
+        ->where('job','like','%'.$job.'%')->first();
+
+
+        if($deliveryTime->currentOrderWork<$deliveryTime->numOfWork){
+            if($deliveryTime->currentOrderWork==0){
+                $deliveryTime->orderName=$order->name;
+                $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
+                if($deliveryTime->save()){
+                    $order->save();
+                    return response()->json([
+                        'success'=>true,
+                        'message'=>$order->name.' store delivery time complete at date '.$deliveryTime->date
+                    ]);
+                }
+            }
+            $deliveryTime->orderName=$deliveryTime->orderName.' '.$order->name;
+            $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
+            if($deliveryTime->save()){
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>$order->name.' store delivery time complete at date '.$deliveryTime->date
+                ]);
+            }
+        }
+        return response()->json([
+            'success'=>false,
+            'message'=>'store delivery time failed'
+        ]);
+
+    }
+
+    public function cancelDeliveryTime(Order $order){
+        $deli_date=$order->deli_date;
+        $deli_time=$order->deli_time;
+        $job="ส่งผ้า";
+        $order->deli_date=null;
+        $order->deli_time=null;
+        $order->deliver="";
+        $deliveryTime=DeliveryTime::where('date','like','%'.$deli_date.'%')
+        ->where('time','like','%'.$deli_time.'%')
+        ->where('job','like','%'.$job.'%')->first();
+        $order_name=$order->name;
+        $deliveryTime->orderName=str_replace($order_name,"",$deliveryTime->orderName);
+        $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork-1;
+        if($deliveryTime->save()){
+            $order->save();
+            return response()->json([
+                'success'=>true,
+                'message'=>'you cancel delivery time of order :'.$order_name
+            ]);
+        }
+        return response()->json([
+            'success'=>false,
+            'message'=>'cancel failed'
+        ]);
+    }
+
+    public function storePickTime(Order $order,Request $request){
+        $order->pick_date=$request->get('pick_date');
+        $order->pick_time=$request->get('pick_time');
+        $deliver=Employee::where('name','like','%'.$request->get('deliver').'%')->first();
+        $order->deliver=$deliver->name;
+        $job="รับผ้า";
+
+        $deliveryTime=DeliveryTime::where('date','like','%'.$request->get('pick_date').'%')
+        ->where('time','like','%'.$request->get('pick_time').'%')
+        ->where('job','like','%'.$job.'%')->first();
+
+
+        if($deliveryTime->currentOrderWork<$deliveryTime->numOfWork){
+            if($deliveryTime->currentOrderWork==0){
+                $deliveryTime->orderName=$order->name;
+                $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
+                if($deliveryTime->save()){
+                    $order->save();
+                    return response()->json([
+                        'success'=>true,
+                        'message'=>$order->name.' store pick time complete at date '.$deliveryTime->date
+                    ]);
+                }
+            }
+            $deliveryTime->orderName=$deliveryTime->orderName.' '.$order->name;
+            $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
+            if($deliveryTime->save()){
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>$order->name.' store pick time complete at date '.$deliveryTime->date
+                ]);
+            }
+        }
+        return response()->json([
+            'success'=>false,
+            'message'=>'store pick time failed'
+        ]);
+
+    }
+
 
 
 

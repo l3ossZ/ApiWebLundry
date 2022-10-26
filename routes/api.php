@@ -59,6 +59,8 @@ Route::get('/customers/{customer}/getCustomerAddress',[CustomerController::class
 Route::get('/customers/getCustomerAddressAuth',[CustomerController::class,'getCustomerAddressAuth']);
 Route::put('/customers/{customer}/addMemberService',[CustomerController::class,'addMemberService']);
 Route::get('laundry/{laundry}/getName',[LaundryController::class,'getName']);
+Route::put('orders/{order}/storeDeliveryTime',[OrderController::class,'storeDeliveryTime']);
+Route::put('orders/{order}/cancelDeliveryTime',[OrderController::class,'cancelDeliveryTime']);
 Route::apiResource('/rewards', \App\Http\Controllers\Api\RewardController::class);
 Route::apiResource('/reward_codes', \App\Http\Controllers\Api\RewardCodeController::class);
 Route::apiResource('/orders',ApiOrderController::class);

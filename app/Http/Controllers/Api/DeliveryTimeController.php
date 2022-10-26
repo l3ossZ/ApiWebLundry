@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\DeliveryTime;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -32,12 +33,14 @@ class DeliveryTimeController extends Controller
      */
     public function store(Request $request)
     {
+        $today=Carbon::now()->toDateString();
 
         $deliveryTime=new DeliveryTime();
-        $deliveryTime->date=$request->get('date');
+        $deliveryTime->date=$request->get('date')??$today;
         $deliveryTime->time=$request->get('time');
-        $deliveryTime->orderId=$request->get('orderId');
+        $deliveryTime->orderName=$request->get('orderName')??"";
         $deliveryTime->job=$request->get('job');
+        $deliveryTime->numOfWork=$request->get('numOfWork') ?? 3 ;
 
         if ($deliveryTime->save()) {
             return response()->json([
@@ -79,7 +82,7 @@ class DeliveryTimeController extends Controller
 
         $deliveryTime->date=$request->get('date');
         $deliveryTime->time=$request->get('time');
-        $deliveryTime->orderId=$request->get('orderId');
+        $deliveryTime->orderName=$request->get('orderName');
         $deliveryTime->job=$request->get('job');
 
         if ($deliveryTime->save()) {
