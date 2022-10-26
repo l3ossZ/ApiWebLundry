@@ -523,29 +523,35 @@ class OrderController extends Controller
             ]);
         }
         if($order->pay_method=="สมาชิก"){
-            $order->is_membership_or=true;
-            $amount=0;
-            $clothLists=$order->clothLists->all();
-            foreach($clothLists as $clothlist){
-                $amount=$amount+$clothlist->quantity;
-            }
-            $customer=Customer::where('phone','like','%'.$order->cus_phone.'%')->first();
-            $memCredit=$customer->memCredit;
-                if($amount<$memCredit){
-                    $customer->memCredit=$memCredit-$amount;
-                    $order->pay_status=true;
-                    $order->save();
-                    $customer->save();
 
-                    return response()->json([
-                        'success'=>true,
-                        'message'=>'pay complete current credit :'.$customer->memCredit
-                    ]);
+            $customer=Customer::where('phone','like','%'.$order->cus_phone.'%')->first();
+            if($customer->isMembership==true){
+                if($order->service=="ซักรีด" || $order->service=="ซักอบ"){
+                    $order->is_membership_or=true;
+                    $amount=0;
+                    $clothLists=$order->clothLists->all();
+                    foreach($clothLists as $clothlist){
+                        $amount=$amount+$clothlist->quantity;
+                    }
+                    $memCredit=$customer->memCredit;
+                    if($amount<$memCredit){
+                        $customer->memCredit=$memCredit-$amount;
+                        $order->pay_status=true;
+                        $order->save();
+                        $customer->save();
+
+                        return response()->json([
+                            'success'=>true,
+                            'message'=>'pay complete current credit :'.$customer->memCredit
+                        ]);
+                    }
                 }
+            }
+
 
             return response()->json([
                 'success'=>false,
-                'message'=>'Credit not enough to pay'
+                'message'=>'failed to pay'
             ]);
         }
 
@@ -657,6 +663,34 @@ class OrderController extends Controller
         ]);
 
     }
+
+    public function cancelPickTime(Order $order){
+        $pick_date=$order->pick_date;
+        $pick_time=$order->pick_time;
+        $job="รับผ้า";
+        $order->pick_date=null;
+        $order->pick_time=null;
+        $order->deliver="";
+        $deliveryTime=DeliveryTime::where('date','like','%'.$pick_date.'%')
+        ->where('time','like','%'.$pick_time.'%')
+        ->where('job','like','%'.$job.'%')->first();
+        $order_name=$order->name;
+        $deliveryTime->orderName=str_replace($order_name,"",$deliveryTime->orderName);
+        $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork-1;
+        if($deliveryTime->save()){
+            $order->save();
+            return response()->json([
+                'success'=>true,
+                'message'=>'you cancel pick time of order :'.$order_name
+            ]);
+        }
+        return response()->json([
+            'success'=>false,
+            'message'=>'cancel failed'
+        ]);
+    }
+
+    
 
 
 

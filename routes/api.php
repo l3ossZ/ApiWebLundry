@@ -61,6 +61,8 @@ Route::put('/customers/{customer}/addMemberService',[CustomerController::class,'
 Route::get('laundry/{laundry}/getName',[LaundryController::class,'getName']);
 Route::put('orders/{order}/storeDeliveryTime',[OrderController::class,'storeDeliveryTime']);
 Route::put('orders/{order}/cancelDeliveryTime',[OrderController::class,'cancelDeliveryTime']);
+Route::put('orders/{order}/storePickTime',[OrderController::class,'storePickTime']);
+Route::put('orders/{order}/cancelPickTime',[OrderController::class,'cancelPickTime']);
 Route::apiResource('/rewards', \App\Http\Controllers\Api\RewardController::class);
 Route::apiResource('/reward_codes', \App\Http\Controllers\Api\RewardCodeController::class);
 Route::apiResource('/orders',ApiOrderController::class);

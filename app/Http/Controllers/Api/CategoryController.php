@@ -127,7 +127,8 @@ class CategoryController extends Controller
         $category=Category::where('service_rate_id','like','%'.$service_rate_id.'%')->get();
 
         return $category;
-
     }
+
+    
 
 }

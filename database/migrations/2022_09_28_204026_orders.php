@@ -28,8 +28,8 @@ return new class extends Migration
             $table->string('deliver')->nullable()->default(null);
             $table->boolean('pay_status')->default(false);
             $table->string('pay_method')->default("เงินสด");
-            $table->double('pick_ser_charge')->nullable()->default(null);
-            $table->double('deli_ser_charge')->nullable()->default(null);
+            $table->double('pick_ser_charge')->nullable()->default(0);
+            $table->double('deli_ser_charge')->nullable()->default(0);
             $table->double('total')->default(0);
             $table->string('status')->default("Order Add");
             $table->boolean('is_membership_or')->default(false);
