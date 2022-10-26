@@ -507,6 +507,35 @@ class OrderController extends Controller
 
     public function payStatus(Order $order){
         if($order->pay_method=="เงินสด"){
+            if($order->deliver!=null || $order->deli_date!=null || $order->deli_time!=null){
+                $amount=0;
+                $clothLists=$order->clothLists->all();
+                foreach($clothLists as $clothlist){
+                    $amount=$amount+$clothlist->quantity;
+                }
+                if($amount<=15){
+                    $order->deli_ser_charge=15;
+                    $order->total=$order->total+15;
+                    $order->save();
+                }
+                if($amount>15 && $amount<=40){
+                    $order->deli_ser_charge=25;
+                    $order->total=$order->total+25;
+                    $order->save();
+                }
+                if($amount>40){
+                    $order->deli_ser_charge=30;
+                    $order->total=$order->total+30;
+                    $order->save();
+                }
+                $order->pay_status=true;
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'pay complete '.$order->pay_status
+                ]);
+            }
+
             $order->pay_status=true;
             $order->save();
             return response()->json([
@@ -515,6 +544,35 @@ class OrderController extends Controller
             ]);
         }
         if($order->pay_method=="พร้อมเพย์"){
+            if($order->deliver!=null || $order->deli_date!=null || $order->deli_time!=null){
+                $amount=0;
+                $clothLists=$order->clothLists->all();
+                foreach($clothLists as $clothlist){
+                    $amount=$amount+$clothlist->quantity;
+                }
+                if($amount<=15){
+                    $order->deli_ser_charge=15;
+                    $order->total=$order->total+15;
+                    $order->save();
+                }
+                if($amount>15 && $amount<=40){
+                    $order->deli_ser_charge=25;
+                    $order->total=$order->total+25;
+                    $order->save();
+                }
+                if($amount>40){
+                    $order->deli_ser_charge=30;
+                    $order->total=$order->total+30;
+                    $order->save();
+                }
+                $order->pay_status=true;
+                $order->save();
+                return response()->json([
+                    'success'=>true,
+                    'message'=>'pay complete '.$order->pay_status
+                ]);
+            }
+
             $order->pay_status=true;
             $order->save();
             return response()->json([
@@ -547,15 +605,13 @@ class OrderController extends Controller
                     }
                 }
             }
-
-
             return response()->json([
                 'success'=>false,
                 'message'=>'failed to pay'
             ]);
         }
-
     }
+
     public function storeDeliveryTime(Order $order,Request $request){
         $order->deli_date=$request->get('deli_date');
         $order->deli_time=$request->get('deli_time');
@@ -690,7 +746,7 @@ class OrderController extends Controller
         ]);
     }
 
-    
+
 
 
 
