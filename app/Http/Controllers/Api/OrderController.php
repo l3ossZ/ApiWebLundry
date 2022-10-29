@@ -294,15 +294,15 @@ class OrderController extends Controller
         $order->deli_date=$request->get('deli_date') ?? null;
         $order->deli_time=$request->get('deli_time') ?? null;
         $order->address=$request->get('address');
-        $order->responder=$request->get('responder') ?? null;
-        $order->deliver=$request->get('deliver') ?? null;
+        // $order->responder=$request->get('responder') ?? null;
+        // $order->deliver=$request->get('deliver') ?? null;
         $order->pay_method=$request->get('pay_method') ?? "เงินสด";
         $order->pick_ser_charge=$request->get('pick_ser_charge') ?? null;
         $order->deli_ser_charge=$request->get('deli_ser_charge') ?? null;
         // $order->is_membership_or=$request->get('is_membership_or') ?? null;
 
-        $employee=Employee::where('name','like','%'.$request->get('responder').'%')->first();
-        $order->employee_id=$employee->id;
+        // $employee=Employee::where('name','like','%'.$request->get('responder').'%')->first();
+        // $order->employee_id=$employee->id;
         $order->cus_phone=$userPhone;
 
 
@@ -746,7 +746,41 @@ class OrderController extends Controller
         ]);
     }
 
-    // public function accept
+    public function acceptOrderForEmployee(Order $order){
+        $employeePhone=Auth::user()->phone;
+        $employee=Employee::where('phone','like','%'.$employeePhone.'%')->first();
+        $order->employee_id=$employee->id;
+        $order->responder=$employee->name;
+        $order->status='order-confirm';
+        if($order->save()){
+            return response()->json([
+                'success'=>true,
+                'message'=>'Order has accept by '.$employee->name,
+            ],Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'success'=>true,
+            'message'=>'accept order failed'
+        ],Response::HTTP_BAD_REQUEST);
+    }
+
+    public function acceptOrderForDeliver(Order $order){
+        $employeePhone=Auth::user()->phone;
+        $employee=Employee::where('phone','like','%'.$employeePhone.'%')->first();
+        $order->deliver=$employee->name;
+        if($order->save()){
+            return response()->json([
+                'success'=>true,
+                'message'=>'Order has accept by '.$employee->name,
+            ],Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'success'=>true,
+            'message'=>'accept order failed'
+        ],Response::HTTP_BAD_REQUEST);
+    }
 
 
 

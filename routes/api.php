@@ -63,6 +63,8 @@ Route::put('orders/{order}/storeDeliveryTime',[OrderController::class,'storeDeli
 Route::put('orders/{order}/cancelDeliveryTime',[OrderController::class,'cancelDeliveryTime']);
 Route::put('orders/{order}/storePickTime',[OrderController::class,'storePickTime']);
 Route::put('orders/{order}/cancelPickTime',[OrderController::class,'cancelPickTime']);
+Route::put('orders/{order}/acceptOrderForEmployee',[OrderController::class,'acceptOrderForEmployee']);
+Route::put('orders/{order}/acceptOrderForDeliver',[OrderController::class,'acceptOrderForDeliver']);
 // Route::apiResource('/rewards', \App\Http\Controllers\Api\RewardController::class);
 // Route::apiResource('/reward_codes', \App\Http\Controllers\Api\RewardCodeController::class);
 Route::apiResource('/orders',ApiOrderController::class);
