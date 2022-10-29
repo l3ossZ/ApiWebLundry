@@ -37,7 +37,6 @@ class ServiceRateController extends Controller
         $serviceRate=new ServiceRate();
         $serviceRate->service=$request->get('service');
         $serviceRate->basePrice=$request->get('basePrice');
-
         if ($serviceRate->save()) {
             return response()->json([
                 'success' => true,
@@ -49,7 +48,6 @@ class ServiceRateController extends Controller
             'success' => false,
             'message' => 'ServiceRate creation failed'
         ], Response::HTTP_BAD_REQUEST);
-
         //
     }
 
@@ -79,7 +77,6 @@ class ServiceRateController extends Controller
             'success' => false,
             'message' => 'ServiceRate update failed'
         ], Response::HTTP_BAD_REQUEST);
-
     }
 
     /**
@@ -90,7 +87,12 @@ class ServiceRateController extends Controller
      */
     public function destroy(ServiceRate $serviceRate)
     {
-        //
+        if($serviceRate->delete()){
+            return response()->json([
+                'success'=>true,
+                'message'=>'delete complete'
+            ]);
+        }
     }
 
 

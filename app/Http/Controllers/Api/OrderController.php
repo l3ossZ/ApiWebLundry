@@ -294,7 +294,7 @@ class OrderController extends Controller
         $order->deli_date=$request->get('deli_date') ?? null;
         $order->deli_time=$request->get('deli_time') ?? null;
         $order->address=$request->get('address');
-        $order->responder=$request->get('responder');
+        $order->responder=$request->get('responder') ?? null;
         $order->deliver=$request->get('deliver') ?? null;
         $order->pay_method=$request->get('pay_method') ?? "เงินสด";
         $order->pick_ser_charge=$request->get('pick_ser_charge') ?? null;
@@ -745,6 +745,8 @@ class OrderController extends Controller
             'message'=>'cancel failed'
         ]);
     }
+
+    // public function accept
 
 
 

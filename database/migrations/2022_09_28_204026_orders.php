@@ -24,7 +24,7 @@ return new class extends Migration
             $table->date('deli_date')->nullable()->default(null);
             $table->string('deli_time')->nullable()->default(null);
             $table->string('address')->nullable()->default(null);
-            $table->string('responder');
+            $table->string('responder')->nullable();
             $table->string('deliver')->nullable()->default(null);
             $table->boolean('pay_status')->default(false);
             $table->string('pay_method')->default("เงินสด");

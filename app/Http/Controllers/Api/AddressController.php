@@ -37,6 +37,7 @@ class AddressController extends Controller
     {
         //
         $userPhone=Auth::user()->phone;
+        $role=Auth::user()->realrole;
         $address=new Address();
         $address->name=$request->get('name');
         $address->u_code=$request->get('u_code');
@@ -46,7 +47,26 @@ class AddressController extends Controller
         $address->hint=$request->has('hint') ?  $request->get('hint') : null;
         $address->contact=$request->has('contact') ? $request->get('contact') : null;
 
+        if($role=='EMPLOYEE' || $role=='OWNER' || $role=='DELIVER'){
+            if ($address->save()) {
+                $customer=Customer::where('phone','like','%'.$address->cus_phone.'%')->first();
+                $address->customers()->attach($customer->id);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Address created with id ' . $address->id,
+                    'address_id' =>$address->id
+                ],Response::HTTP_CREATED);
+            }
+        }
         if ($address->save()) {
+                // $customer=Customer::where('phone','like','%'.$address->cus_phone.'%')->first();
+                // $address->customers()->attach($customer->id);
+                // return response()->json([
+                //     'success' => true,
+                //     'message' => 'Address created with id ' . $address->id,
+                //     'address_id' =>$address->id
+                // ],Response::HTTP_CREATED);
+
             $customer=Customer::where('phone','like','%'.$userPhone.'%')->first();
             $address->customers()->attach($customer->id);
             return response()->json([
@@ -59,8 +79,9 @@ class AddressController extends Controller
             'success' => false,
             'message' => 'address creation failed'
         ], Response::HTTP_BAD_REQUEST);
-
     }
+
+
 
     /**
      * Display the specified resource.
