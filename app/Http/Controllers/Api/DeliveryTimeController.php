@@ -36,11 +36,11 @@ class DeliveryTimeController extends Controller
         $today=Carbon::now()->toDateString();
 
         $deliveryTime=new DeliveryTime();
-        $deliveryTime->date=$request->get('date')??$today;
+        $deliveryTime->date=$request->get('date');
         $deliveryTime->time=$request->get('time');
-        $deliveryTime->orderName=$request->get('orderName')??"";
+        $deliveryTime->orderName=$request->get('orderName');
         $deliveryTime->job=$request->get('job');
-        $deliveryTime->numOfWork=$request->get('numOfWork') ?? 3 ;
+        $deliveryTime->deliver=$request->get('deliver')??"ยังไม่ลงทะเบียน" ;
 
         if ($deliveryTime->save()) {
             return response()->json([
@@ -84,7 +84,7 @@ class DeliveryTimeController extends Controller
         $deliveryTime->time=$request->get('time');
         $deliveryTime->orderName=$request->get('orderName');
         $deliveryTime->job=$request->get('job');
-
+        $deliveryTime->deliver=$request->get('deliver');
         if ($deliveryTime->save()) {
             return response()->json([
                 'success' => true,
@@ -107,5 +107,14 @@ class DeliveryTimeController extends Controller
     public function destroy(DeliveryTime $deliveryTime)
     {
         //
+    }
+
+    public function getNumOfWork(Request $request){
+        $deliveryTime = DeliveryTime::where('time',$request->get("deli_time"))
+            ->whereDate('date','=',date($request->get('deli_date')));
+        $n = $deliveryTime->count();
+        return response()->json([
+            'numOfWork' => $n
+        ],Response::HTTP_OK);
     }
 }

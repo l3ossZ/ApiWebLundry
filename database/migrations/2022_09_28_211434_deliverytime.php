@@ -14,9 +14,8 @@ return new class extends Migration
             $table->date('date');
             $table->string('time') ;
             $table->string('orderName')->default("");
+            $table->string('deliver')->nullable();
             $table->string('job');
-            $table->integer('numOfWork')->default(3);
-            $table->integer('currentOrderWork')->default(0);
             $table->timestamps();
         });
     }

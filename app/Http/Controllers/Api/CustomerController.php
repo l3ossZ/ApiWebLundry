@@ -193,4 +193,19 @@ class CustomerController extends Controller
             'message'=>'add Member Service Complete '.$customer->id
         ]);
     }
+
+//    public function getNumOfCustomer(){
+//        $customer=Customer::all();
+//        $n = $customer->count();
+//        return response()->json([
+//            'numOfCus' => $n
+//        ],Response::HTTP_OK);
+//    }
+//    public function getNumOfMember(){
+//        $customer=Customer::where('isMembership',1);
+//        $n = $customer->count();
+//        return response()->json([
+//            'numOfMem' => $n
+//        ],Response::HTTP_OK);
+//    }
 }

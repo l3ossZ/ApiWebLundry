@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use function Symfony\Component\String\s;
 
 class OrderController extends Controller
 {
@@ -55,13 +56,14 @@ class OrderController extends Controller
         $order->responder=$request->get('responder');
         $order->deliver=$request->get('deliver') ?? null;
         $order->pay_method=$request->get('pay_method') ?? "เงินสด";
-        $order->pick_ser_charge=$request->get('pick_ser_charge') ?? null;
-        $order->deli_ser_charge=$request->get('deli_ser_charge') ?? null;
+        $order->pick_ser_charge=$request->get('pick_ser_charge') ?? 0;
+        $order->deli_ser_charge=$request->get('deli_ser_charge') ?? 0;
         $order->is_membership_or=$request->get('is_membership_or') ?? false;
         $order->cus_phone=$request->get('cus_phone');
 
         $employee=Employee::where('name','like','%'.$request->get('responder').'%')->first();
         $order->employee_id=$employee->id;
+
 
 
 
@@ -72,7 +74,7 @@ class OrderController extends Controller
             // $new_order=Order::where('cus_phone','like','%'.$request->get('cus_phone').'%')->first();
             // $customer->orders()->attach($new_order->id);
             $order->customers()->attach($customer->id);
-
+            $this->calDeliOnSite($order);
 
             return response()->json([
                 'success' => true,
@@ -505,246 +507,409 @@ class OrderController extends Controller
         }
     }
 
+    public function calDeliOnSite(Order $order){
+        if($order->address!=null && $order->is_membership_or != 1){
+            $amount = 0;
+            $clothLists=$order->clothLists->all();
+            foreach($clothLists as $clothlist){
+                $amount=$amount+$clothlist->quantity;
+            }
+            // Onsite With Deliver
+            if($order->deli_date != null && $order->deli_time != null && $order->pick_date == null && $order->pick_time == null){
+                $deliver = "ยังไม่ลงทะเบียน" ;
+                $job = "ส่งผ้า" ;
+                $delitime = new DeliveryTime();
+                $delitime->date=$order->deli_date;
+                $delitime->time=$order->deli_time;
+                $delitime->orderName=$order->name;
+                $delitime->deliver=$deliver;
+                $order->deliver=$deliver;
+                $delitime->job=$job;
+                $delitime->save();
+                if($amount<=15){
+                    $order->deli_ser_charge=15;
+                    $order->total=$order->total+15;
+                    $order->save();
+                }
+                else if($amount>15 && $amount<=30){
+                    $order->deli_ser_charge=25;
+                    $order->total=$order->total+25;
+                    $order->save();
+
+                }
+                else if($amount>30 && $amount<50){
+                    $order->deli_ser_charge=30;
+                    $order->total=$order->total+30;
+                    $order->save();
+
+                }
+                else if($amount>50){
+                    $order->deli_ser_charge=0;
+                    $order->save();
+                }
+            }
+        }
+        // No Pick/Deli
+        else{
+            return;
+        }
+    }
+
+    public function calDeliApp(Order $order){
+        if($order->address!=null && $order->is_membership_or != 1){
+            $amount = 0;
+            $clothLists=$order->clothLists->all();
+            foreach($clothLists as $clothlist){
+                $amount=$amount+$clothlist->quantity;
+            }
+            // App Delivery
+            if($order->deli_date != null && $order->deli_time != null && $order->pick_date != null && $order->pick_time != null){
+                if($amount<=15){
+                    $order->deli_ser_charge=15;
+                    $order->pick_ser_charge=15;
+                    $order->total=$order->total+30;
+                    $order->save();
+                }
+                else if($amount>15 && $amount<=30){
+                    $order->deli_ser_charge=25;
+                    $order->pick_ser_charge=25;
+                    $order->total=$order->total+50;
+                    $order->save();
+                }
+                else if($amount>30 && $amount<50){
+                    $order->deli_ser_charge=30;
+                    $order->pick_ser_charge=30;
+                    $order->total=$order->total+60;
+                    $order->save();
+                }
+                else if($amount>50){
+                    $order->deli_ser_charge=0;
+                    $order->pick_ser_charge=0;
+                    $order->save();
+                }
+            }
+        }
+        // No Pick/Deli
+        else{
+            return;
+        }
+    }
+
     public function payStatus(Order $order){
-        if($order->pay_method=="เงินสด"){
-            if($order->deliver!=null || $order->deli_date!=null || $order->deli_time!=null){
-                $amount=0;
-                $clothLists=$order->clothLists->all();
-                foreach($clothLists as $clothlist){
-                    $amount=$amount+$clothlist->quantity;
-                }
-                if($amount<=15){
-                    $order->deli_ser_charge=15;
-                    $order->total=$order->total+15;
-                    $order->save();
-                }
-                if($amount>15 && $amount<=40){
-                    $order->deli_ser_charge=25;
-                    $order->total=$order->total+25;
-                    $order->save();
-                }
-                if($amount>40){
-                    $order->deli_ser_charge=30;
-                    $order->total=$order->total+30;
-                    $order->save();
-                }
-                $order->pay_status=true;
-                $order->save();
-                return response()->json([
-                    'success'=>true,
-                    'message'=>'pay complete '.$order->pay_status
-                ]);
-            }
-
-            $order->pay_status=true;
+        $order->pay_status=true;
             $order->save();
             return response()->json([
                 'success'=>true,
+                'pick_ser_charge' => $order->pick_ser_charge,
+                'deli_ser_charge' => $order->deli_ser_charge,
+                'total'=> $order->total,
                 'message'=>'pay complete '.$order->pay_status
             ]);
-        }
-        if($order->pay_method=="พร้อมเพย์"){
-            if($order->deliver!=null || $order->deli_date!=null || $order->deli_time!=null){
-                $amount=0;
-                $clothLists=$order->clothLists->all();
-                foreach($clothLists as $clothlist){
-                    $amount=$amount+$clothlist->quantity;
-                }
-                if($amount<=15){
-                    $order->deli_ser_charge=15;
-                    $order->total=$order->total+15;
-                    $order->save();
-                }
-                if($amount>15 && $amount<=40){
-                    $order->deli_ser_charge=25;
-                    $order->total=$order->total+25;
-                    $order->save();
-                }
-                if($amount>40){
-                    $order->deli_ser_charge=30;
-                    $order->total=$order->total+30;
-                    $order->save();
-                }
-                $order->pay_status=true;
-                $order->save();
-                return response()->json([
-                    'success'=>true,
-                    'message'=>'pay complete '.$order->pay_status
-                ]);
-            }
-
-            $order->pay_status=true;
-            $order->save();
-            return response()->json([
-                'success'=>true,
-                'message'=>'pay complete '.$order->pay_status
-            ]);
-        }
-        if($order->pay_method=="สมาชิก"){
-
-            $customer=Customer::where('phone','like','%'.$order->cus_phone.'%')->first();
-            if($customer->isMembership==true){
-                if($order->service=="ซักรีด" || $order->service=="ซักอบ"){
-                    $order->is_membership_or=true;
-                    $amount=0;
-                    $clothLists=$order->clothLists->all();
-                    foreach($clothLists as $clothlist){
-                        $amount=$amount+$clothlist->quantity;
-                    }
-                    $memCredit=$customer->memCredit;
-                    if($amount<$memCredit){
-                        $customer->memCredit=$memCredit-$amount;
-                        $order->pay_status=true;
-                        $order->save();
-                        $customer->save();
-
-                        return response()->json([
-                            'success'=>true,
-                            'message'=>'pay complete current credit :'.$customer->memCredit
-                        ]);
-                    }
-                }
-            }
-            return response()->json([
-                'success'=>false,
-                'message'=>'failed to pay'
-            ]);
-        }
     }
 
-    public function storeDeliveryTime(Order $order,Request $request){
-        $order->deli_date=$request->get('deli_date');
-        $order->deli_time=$request->get('deli_time');
-        $deliver=Employee::where('name','like','%'.$request->get('deliver').'%')->first();
-        $order->deliver=$deliver->name;
-        $job="ส่งผ้า";
 
-        $deliveryTime=DeliveryTime::where('date','like','%'.$request->get('deli_date').'%')
-        ->where('time','like','%'.$request->get('deli_time').'%')
-        ->where('job','like','%'.$job.'%')->first();
+//    public function payStatus(Order $order){
+//        if($order->pay_method=="เงินสด"){
+//            if($order->deliver!=null || $order->deli_date!=null || $order->deli_time!=null){
+//                $amount=0;
+//                $clothLists=$order->clothLists->all();
+//                foreach($clothLists as $clothlist){
+//                    $amount=$amount+$clothlist->quantity;
+//                }
+//                if($amount<=15){
+//                    $order->deli_ser_charge=15;
+//                    $order->total=$order->total+15;
+//                    $order->save();
+//                }
+//                if($amount>15 && $amount<=40){
+//                    $order->deli_ser_charge=25;
+//                    $order->total=$order->total+25;
+//                    $order->save();
+//                }
+//                if($amount>40){
+//                    $order->deli_ser_charge=30;
+//                    $order->total=$order->total+30;
+//                    $order->save();
+//                }
+//                $order->pay_status=true;
+//                $order->save();
+//                return response()->json([
+//                    'success'=>true,
+//                    'message'=>'pay complete '.$order->pay_status
+//                ]);
+//            }
+//
+//            $order->pay_status=true;
+//            $order->save();
+//            return response()->json([
+//                'success'=>true,
+//                'message'=>'pay complete '.$order->pay_status
+//            ]);
+//        }
+//        if($order->pay_method=="พร้อมเพย์"){
+//            if($order->deliver!=null || $order->deli_date!=null || $order->deli_time!=null){
+//                $amount=0;
+//                $clothLists=$order->clothLists->all();
+//                foreach($clothLists as $clothlist){
+//                    $amount=$amount+$clothlist->quantity;
+//                }
+//                if($amount<=15){
+//                    $order->deli_ser_charge=15;
+//                    $order->total=$order->total+15;
+//                    $order->save();
+//                }
+//                if($amount>15 && $amount<=40){
+//                    $order->deli_ser_charge=25;
+//                    $order->total=$order->total+25;
+//                    $order->save();
+//                }
+//                if($amount>40){
+//                    $order->deli_ser_charge=30;
+//                    $order->total=$order->total+30;
+//                    $order->save();
+//                }
+//                $order->pay_status=true;
+//                $order->save();
+//                return response()->json([
+//                    'success'=>true,
+//                    'message'=>'pay complete '.$order->pay_status
+//                ]);
+//            }
+//
+//            $order->pay_status=true;
+//            $order->save();
+//            return response()->json([
+//                'success'=>true,
+//                'message'=>'pay complete '.$order->pay_status
+//            ]);
+//        }
+//        if($order->pay_method=="สมาชิก"){
+//
+//            $customer=Customer::where('phone','like','%'.$order->cus_phone.'%')->first();
+//            if($customer->isMembership==true){
+//                if($order->service=="ซักรีด" || $order->service=="ซักอบ"){
+//                    $order->is_membership_or=true;
+//                    $amount=0;
+//                    $clothLists=$order->clothLists->all();
+//                    foreach($clothLists as $clothlist){
+//                        $amount=$amount+$clothlist->quantity;
+//                    }
+//                    $memCredit=$customer->memCredit;
+//                    if($amount<$memCredit){
+//                        $customer->memCredit=$memCredit-$amount;
+//                        $order->pay_status=true;
+//                        $order->save();
+//                        $customer->save();
+//
+//                        return response()->json([
+//                            'success'=>true,
+//                            'message'=>'pay complete current credit :'.$customer->memCredit
+//                        ]);
+//                    }
+//                }
+//            }
+//            return response()->json([
+//                'success'=>false,
+//                'message'=>'failed to pay'
+//            ]);
+//        }
+//    }
+
+//    public function storeDeliveryTime(Order $order,Request $request){
+////        $order->deli_date=$request->get('deli_date');
+////        $order->deli_time=$request->get('deli_time');
+//        $job="ส่งผ้า";
+//        if($request->get('deliver') != null){
+//            $deliver=Employee::where('name','like','%'.$request->get('deliver').'%')->first();
+//            $order->deliver=$deliver->name;
+//            $deliveryTime=DeliveryTime::where('date','like','%'.$order->get('deli_date').'%')
+//                ->where('time','like','%'.$order->get('deli_time').'%')
+//                ->where('job','like','%'.$job.'%')->first();
+//
+//
+//            if($deliveryTime->currentOrderWork<$deliveryTime->numOfWork){
+//                if($deliveryTime->currentOrderWork==0){
+//                    $deliveryTime->orderName=$order->name;
+//                    $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
+//                    $deliveryTime->deliver=$deliver->name;
+//                    if($deliveryTime->save()){
+//                        $order->save();
+//                        return response()->json([
+//                            'success'=>true,
+//                            'message'=>$order->name.' store delivery time complete at date '.$deliveryTime->date
+//                        ]);
+//                    }
+//                }
+//                $deliveryTime->orderName=$deliveryTime->orderName.' '.$order->name;
+//                $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
+//                $deliveryTime->deliver=$deliver->name;
+//                if($deliveryTime->save()){
+//                    $order->save();
+//                    return response()->json([
+//                        'success'=>true,
+//                        'message'=>$order->name.' store delivery time complete at date '.$deliveryTime->date
+//                    ]);
+//                }
+//            }
+//        }
+//        else if($request->get('deliver') == null){
+//            $deliver = "ยังไม่ลงทะเบียน";
+//            $order->deliver=$deliver;
+//            $deliveryTime=DeliveryTime::where('date','like','%'.$order->get('deli_date').'%')
+//                ->where('time','like','%'.$order->get('deli_time').'%')
+//                ->where('job','like','%'.$job.'%')->first();
+//            if($deliveryTime->currentOrderWork<$deliveryTime->numOfWork){
+//                if($deliveryTime->currentOrderWork==0){
+//                    $deliveryTime->orderName=$order->name;
+//                    $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
+//                    $deliveryTime->deliver=$deliver;
+//                    if($deliveryTime->save()){
+//                        $order->save();
+//                        return response()->json([
+//                            'success'=>true,
+//                            'message'=>$order->name.' store delivery time complete at date '.$deliveryTime->date
+//                        ]);
+//                    }
+//                }
+//                $deliveryTime->orderName=$deliveryTime->orderName.' '.$order->name;
+//                $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
+//                $deliveryTime->deliver=$deliver;
+//                if($deliveryTime->save()){
+//                    $order->save();
+//                    return response()->json([
+//                        'success'=>true,
+//                        'message'=>$order->name.' store delivery time complete at date '.$deliveryTime->date
+//                    ]);
+//                }
+//            }
+//        }
+
+//        $deliver=Employee::where('name','like','%'.$request->get('deliver').'%')->first();
+//        $order->deliver=$deliver->name;
 
 
-        if($deliveryTime->currentOrderWork<$deliveryTime->numOfWork){
-            if($deliveryTime->currentOrderWork==0){
-                $deliveryTime->orderName=$order->name;
-                $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
-                if($deliveryTime->save()){
-                    $order->save();
-                    return response()->json([
-                        'success'=>true,
-                        'message'=>$order->name.' store delivery time complete at date '.$deliveryTime->date
-                    ]);
-                }
-            }
-            $deliveryTime->orderName=$deliveryTime->orderName.' '.$order->name;
-            $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
-            if($deliveryTime->save()){
-                $order->save();
-                return response()->json([
-                    'success'=>true,
-                    'message'=>$order->name.' store delivery time complete at date '.$deliveryTime->date
-                ]);
-            }
-        }
-        return response()->json([
-            'success'=>false,
-            'message'=>'store delivery time failed'
-        ]);
 
-    }
+//        if($deliveryTime->currentOrderWork<$deliveryTime->numOfWork){
+//            if($deliveryTime->currentOrderWork==0){
+//                $deliveryTime->orderName=$order->name;
+//                $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
+//                if($deliveryTime->save()){
+//                    $order->save();
+//                    return response()->json([
+//                        'success'=>true,
+//                        'message'=>$order->name.' store delivery time complete at date '.$deliveryTime->date
+//                    ]);
+//                }
+//            }
+//            $deliveryTime->orderName=$deliveryTime->orderName.' '.$order->name;
+//            $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
+//            if($deliveryTime->save()){
+//                $order->save();
+//                return response()->json([
+//                    'success'=>true,
+//                    'message'=>$order->name.' store delivery time complete at date '.$deliveryTime->date
+//                ]);
+//            }
+//        }
+//        return response()->json([
+//            'success'=>false,
+//            'message'=>'store delivery time failed'
+//        ]);
+//    }
 
-    public function cancelDeliveryTime(Order $order){
-        $deli_date=$order->deli_date;
-        $deli_time=$order->deli_time;
-        $job="ส่งผ้า";
-        $order->deli_date=null;
-        $order->deli_time=null;
-        $order->deliver="";
-        $deliveryTime=DeliveryTime::where('date','like','%'.$deli_date.'%')
-        ->where('time','like','%'.$deli_time.'%')
-        ->where('job','like','%'.$job.'%')->first();
-        $order_name=$order->name;
-        $deliveryTime->orderName=str_replace($order_name,"",$deliveryTime->orderName);
-        $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork-1;
-        if($deliveryTime->save()){
-            $order->save();
-            return response()->json([
-                'success'=>true,
-                'message'=>'you cancel delivery time of order :'.$order_name
-            ]);
-        }
-        return response()->json([
-            'success'=>false,
-            'message'=>'cancel failed'
-        ]);
-    }
-
-    public function storePickTime(Order $order,Request $request){
-        $order->pick_date=$request->get('pick_date');
-        $order->pick_time=$request->get('pick_time');
-        $deliver=Employee::where('name','like','%'.$request->get('deliver').'%')->first();
-        $order->deliver=$deliver->name;
-        $job="รับผ้า";
-
-        $deliveryTime=DeliveryTime::where('date','like','%'.$request->get('pick_date').'%')
-        ->where('time','like','%'.$request->get('pick_time').'%')
-        ->where('job','like','%'.$job.'%')->first();
-
-
-        if($deliveryTime->currentOrderWork<$deliveryTime->numOfWork){
-            if($deliveryTime->currentOrderWork==0){
-                $deliveryTime->orderName=$order->name;
-                $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
-                if($deliveryTime->save()){
-                    $order->save();
-                    return response()->json([
-                        'success'=>true,
-                        'message'=>$order->name.' store pick time complete at date '.$deliveryTime->date
-                    ]);
-                }
-            }
-            $deliveryTime->orderName=$deliveryTime->orderName.' '.$order->name;
-            $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
-            if($deliveryTime->save()){
-                $order->save();
-                return response()->json([
-                    'success'=>true,
-                    'message'=>$order->name.' store pick time complete at date '.$deliveryTime->date
-                ]);
-            }
-        }
-        return response()->json([
-            'success'=>false,
-            'message'=>'store pick time failed'
-        ]);
-
-    }
-
-    public function cancelPickTime(Order $order){
-        $pick_date=$order->pick_date;
-        $pick_time=$order->pick_time;
-        $job="รับผ้า";
-        $order->pick_date=null;
-        $order->pick_time=null;
-        $order->deliver="";
-        $deliveryTime=DeliveryTime::where('date','like','%'.$pick_date.'%')
-        ->where('time','like','%'.$pick_time.'%')
-        ->where('job','like','%'.$job.'%')->first();
-        $order_name=$order->name;
-        $deliveryTime->orderName=str_replace($order_name,"",$deliveryTime->orderName);
-        $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork-1;
-        if($deliveryTime->save()){
-            $order->save();
-            return response()->json([
-                'success'=>true,
-                'message'=>'you cancel pick time of order :'.$order_name
-            ]);
-        }
-        return response()->json([
-            'success'=>false,
-            'message'=>'cancel failed'
-        ]);
-    }
+//
+//    public function cancelDeliveryTime(Order $order){
+//        $deli_date=$order->deli_date;
+//        $deli_time=$order->deli_time;
+//        $job="ส่งผ้า";
+//        $order->deli_date=null;
+//        $order->deli_time=null;
+//        $order->deliver="";
+//        $deliveryTime=DeliveryTime::where('date','like','%'.$deli_date.'%')
+//        ->where('time','like','%'.$deli_time.'%')
+//        ->where('job','like','%'.$job.'%')->first();
+//        $order_name=$order->name;
+//        $deliveryTime->orderName=str_replace($order_name,"",$deliveryTime->orderName);
+//        $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork-1;
+//        if($deliveryTime->save()){
+//            $order->save();
+//            return response()->json([
+//                'success'=>true,
+//                'message'=>'you cancel delivery time of order :'.$order_name
+//            ]);
+//        }
+//        return response()->json([
+//            'success'=>false,
+//            'message'=>'cancel failed'
+//        ]);
+//    }
+//
+//    public function storePickTime(Order $order,Request $request){
+//        $order->pick_date=$request->get('pick_date');
+//        $order->pick_time=$request->get('pick_time');
+//        $deliver=Employee::where('name','like','%'.$request->get('deliver').'%')->first();
+//        $order->deliver=$deliver->name;
+//        $job="รับผ้า";
+//
+//        $deliveryTime=DeliveryTime::where('date','like','%'.$request->get('pick_date').'%')
+//        ->where('time','like','%'.$request->get('pick_time').'%')
+//        ->where('job','like','%'.$job.'%')->first();
+//
+//
+//        if($deliveryTime->currentOrderWork<$deliveryTime->numOfWork){
+//            if($deliveryTime->currentOrderWork==0){
+//                $deliveryTime->orderName=$order->name;
+//                $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
+//                if($deliveryTime->save()){
+//                    $order->save();
+//                    return response()->json([
+//                        'success'=>true,
+//                        'message'=>$order->name.' store pick time complete at date '.$deliveryTime->date
+//                    ]);
+//                }
+//            }
+//            $deliveryTime->orderName=$deliveryTime->orderName.' '.$order->name;
+//            $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork+1;
+//            if($deliveryTime->save()){
+//                $order->save();
+//                return response()->json([
+//                    'success'=>true,
+//                    'message'=>$order->name.' store pick time complete at date '.$deliveryTime->date
+//                ]);
+//            }
+//        }
+//        return response()->json([
+//            'success'=>false,
+//            'message'=>'store pick time failed'
+//        ]);
+//
+//    }
+//
+//    public function cancelPickTime(Order $order){
+//        $pick_date=$order->pick_date;
+//        $pick_time=$order->pick_time;
+//        $job="รับผ้า";
+//        $order->pick_date=null;
+//        $order->pick_time=null;
+//        $order->deliver="";
+//        $deliveryTime=DeliveryTime::where('date','like','%'.$pick_date.'%')
+//        ->where('time','like','%'.$pick_time.'%')
+//        ->where('job','like','%'.$job.'%')->first();
+//        $order_name=$order->name;
+//        $deliveryTime->orderName=str_replace($order_name,"",$deliveryTime->orderName);
+//        $deliveryTime->currentOrderWork=$deliveryTime->currentOrderWork-1;
+//        if($deliveryTime->save()){
+//            $order->save();
+//            return response()->json([
+//                'success'=>true,
+//                'message'=>'you cancel pick time of order :'.$order_name
+//            ]);
+//        }
+//        return response()->json([
+//            'success'=>false,
+//            'message'=>'cancel failed'
+//        ]);
+//    }
 
     public function acceptOrderForEmployee(Order $order){
         $employeePhone=Auth::user()->phone;
@@ -764,24 +929,92 @@ class OrderController extends Controller
             'message'=>'accept order failed'
         ],Response::HTTP_BAD_REQUEST);
     }
+//
+//    public function acceptOrderForDeliver(Order $order){
+//        $employeePhone=Auth::user()->phone;
+//        $employee=Employee::where('phone','like','%'.$employeePhone.'%')->first();
+//        $order->deliver=$employee->name;
+//        if($order->save()){
+//            return response()->json([
+//                'success'=>true,
+//                'message'=>'Order has accept by '.$employee->name,
+//            ],Response::HTTP_OK);
+//        }
+//
+//        return response()->json([
+//            'success'=>true,
+//            'message'=>'accept order failed'
+//        ],Response::HTTP_BAD_REQUEST);
+//    }
+//
+    public function getTodayOrder(){
+        $order = Order::whereDate('created_at',Carbon::today())->get();
+        return $order;
+    }
+//
+//    public function getIncomeToday(){
+//        $order = $this->getTodayOrder();
+//        $income = $order->sum('total');
+//        return response()->json([
+//            'income'=> $income
+//        ],Response::HTTP_OK);
+//    }
 
-    public function acceptOrderForDeliver(Order $order){
-        $employeePhone=Auth::user()->phone;
-        $employee=Employee::where('phone','like','%'.$employeePhone.'%')->first();
-        $order->deliver=$employee->name;
-        if($order->save()){
-            return response()->json([
-                'success'=>true,
-                'message'=>'Order has accept by '.$employee->name,
-            ],Response::HTTP_OK);
-        }
+//    public function getNumOfCompleteOrder(){
+//        $order = Order::where('status','Complete');
+//        return response()->json([
+//            'completeOrder'=> $order->count()
+//        ],Response::HTTP_OK);
+//    }
+
+//    public function getNumOfInprogressOrder(){
+//        $order = Order::where('status','in progress');
+//        return response()->json([
+//            'inprogress'=> $order->count()
+//        ],Response::HTTP_OK);
+//    }
+//
+//    public function getNumOfNotPayOrder(){
+//        $order = Order::where('pay_status',false);
+//        return response()->json([
+//            'notPay'=> $order->count()
+//        ],Response::HTTP_OK);
+//    }
+
+//    public function getNumOfCustomer(){
+//        $customer=Customer::all();
+//        $n = $customer->count();
+//        return response()->json([
+//            'numOfCus' => $n
+//        ],Response::HTTP_OK);
+//    }
+//    public function getNumOfMember(){
+//        $customer=Customer::where('isMembership',1);
+//        $n = $customer->count();
+//        return response()->json([
+//            'numOfMem' => $n
+//        ],Response::HTTP_OK);
+//    }
+
+
+    public function getDashboardData(){
+        $orderComplete = Order::where('status','Complete');
+        $order = $this->getTodayOrder();
+        $income = $order->sum('total');
+        $inprogress = Order::where('status','in progress');
+        $notPay = Order::where('pay_status',false);
+        $customerall =Customer::all();
+        $customerMem=Customer::where('isMembership',1);
 
         return response()->json([
-            'success'=>true,
-            'message'=>'accept order failed'
-        ],Response::HTTP_BAD_REQUEST);
+            'completeOrder'=> $orderComplete->count(),
+            'income'=> $income,
+            'inprogress'=> $inprogress->count(),
+            'notPay'=> $notPay->count(),
+            'numOfCus' => $customerall->count(),
+            'numOfMem' => $customerMem->count()
+        ],Response::HTTP_OK);
     }
-
 
 
 

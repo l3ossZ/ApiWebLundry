@@ -58,6 +58,8 @@ Route::put('/orders/{order}/nextStatus',[OrderController::class,'nextStatus']);
 Route::get('/customers/{customer}/getCustomerAddress',[CustomerController::class,'getCustomerAddress']);
 Route::get('/customers/getCustomerAddressAuth',[CustomerController::class,'getCustomerAddressAuth']);
 Route::put('/customers/{customer}/addMemberService',[CustomerController::class,'addMemberService']);
+//Route::get('/customers/getNumOfCustomer',[CustomerController::class,'getNumOfCustomer']);
+//Route::get('/customers/getNumOfMember',[CustomerController::class,'getNumOfMember']);
 Route::get('laundry/{laundry}/getName',[LaundryController::class,'getName']);
 Route::put('orders/{order}/storeDeliveryTime',[OrderController::class,'storeDeliveryTime']);
 Route::put('orders/{order}/cancelDeliveryTime',[OrderController::class,'cancelDeliveryTime']);
@@ -65,8 +67,19 @@ Route::put('orders/{order}/storePickTime',[OrderController::class,'storePickTime
 Route::put('orders/{order}/cancelPickTime',[OrderController::class,'cancelPickTime']);
 Route::put('orders/{order}/acceptOrderForEmployee',[OrderController::class,'acceptOrderForEmployee']);
 Route::put('orders/{order}/acceptOrderForDeliver',[OrderController::class,'acceptOrderForDeliver']);
+Route::get('/orders/getTodayOrder',[OrderController::class,'getTodayOrder']);
+Route::get('/orders/getDashboardData',[OrderController::class,'getDashboardData']);
+
+//Route::get('/orders/getIncomeToday',[OrderController::class,'getIncomeToday']);
+//Route::get('/orders/getNumOfCompleteOrder',[OrderController::class,'getNumOfCompleteOrder']);
+//Route::get('/orders/getNumOfInprogressOrder',[OrderController::class,'getNumOfInprogressOrder']);
+//Route::get('/orders/getNumOfNotPayOrder',[OrderController::class,'getNumOfNotPayOrder']);
+
+
 // Route::apiResource('/rewards', \App\Http\Controllers\Api\RewardController::class);
 // Route::apiResource('/reward_codes', \App\Http\Controllers\Api\RewardCodeController::class);
+Route::put('/delivery-time/getNumOfWork',[DeliveryTimeController::class,'getNumOfWork']);
+
 Route::apiResource('/orders',ApiOrderController::class);
 Route::apiResource('/customers',CustomerController::class);
 Route::apiResource('/address',AddressController::class);
