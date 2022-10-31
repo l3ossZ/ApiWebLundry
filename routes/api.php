@@ -51,6 +51,10 @@ Route::get('/category/getCategoryByService',[CategoryController::class,'getCateg
 Route::get('/customers/{customer}/getOrderOfCustomer',[CustomerController::class,'getOrderOfCustomer']);
 Route::get('/customers/getOrderOfCustomerAuth',[CustomerController::class,'getOrderOfCustomerAuth']);
 Route::delete('/orders/{order}/clothList/{clothList}',[OrderController::class,'deleteClothList']);
+Route::get("/orders/getOrderWeek",[OrderController::class,'getOrderWeek']);
+Route::get("/orders/getOrderMonth",[OrderController::class,'getOrderMonth']);
+Route::get("/orders/getOrderYear",[OrderController::class,'getOrderYear']);
+
 Route::put('/orders/{order}/clothList/{clothList}',[OrderController::class,'editClothList']);
 Route::get('/orders/{order}/generateQr',[OrderController::class,'generateQr']);
 Route::put('/orders/{order}/payStatus',[OrderController::class,'payStatus']);
@@ -79,6 +83,7 @@ Route::get('/orders/getDashboardData',[OrderController::class,'getDashboardData'
 // Route::apiResource('/rewards', \App\Http\Controllers\Api\RewardController::class);
 // Route::apiResource('/reward_codes', \App\Http\Controllers\Api\RewardCodeController::class);
 Route::put('/delivery-time/getNumOfWork',[DeliveryTimeController::class,'getNumOfWork']);
+Route::put('/delivery-time/getAvailableInDateTime',[DeliveryTimeController::class,'getAvailableInDateTime']);
 
 Route::apiResource('/orders',ApiOrderController::class);
 Route::apiResource('/customers',CustomerController::class);

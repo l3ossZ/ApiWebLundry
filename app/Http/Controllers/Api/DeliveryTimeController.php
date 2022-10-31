@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\DeliveryTime;
+use App\Models\Laundry;
+use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -116,5 +118,50 @@ class DeliveryTimeController extends Controller
         return response()->json([
             'numOfWork' => $n
         ],Response::HTTP_OK);
+    }
+
+    public function getAvailableInDateTime(Request $request){
+        $id = 1 ;
+        $morn = "ช่วงเช้า";
+        $after= "ช่วงบ่าย";
+        $even = "ช่วงเย็น" ;
+        $laundry = Laundry::where('id',$id)->first()->pluck('numOfWork');
+
+        $morn = DeliveryTime::where('time',$morn)
+            ->whereDate('date','=',date($request->get('deli_date')))->count();
+        if($morn < $laundry[0]){
+            $morn = true ;
+        }
+        else{
+            $morn = false;
+        }
+
+        $after = DeliveryTime::where('time',$after)
+            ->whereDate('date','=',date($request->get('deli_date')))->count();
+        if($after < $laundry[0]){
+            $after = true ;
+        }
+        else{
+            $after = false;
+        }
+        $even = DeliveryTime::where('time',$even)
+            ->whereDate('date','=',date($request->get('deli_date')))->count();
+        if($even < $laundry[0]){
+            $even = true ;
+        }
+        else{
+            $even = false;
+        }
+        return response()->json([
+            'date' => $request->get('deli_date'),
+            'maxWorkPerTime' => $laundry[0],
+            'morning' => $morn,
+            'after' => $after,
+            'even'=> $even
+        ],Response::HTTP_OK);
+    }
+
+    public function addDeliver(Request $request){
+        
     }
 }

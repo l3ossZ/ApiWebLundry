@@ -213,6 +213,8 @@ class OrderController extends Controller
 
     }
 
+
+
     public function editClothList(Request $request,Order $order,ClothList $clothList){
         $service=ServiceRate::where('service','like','%'.$clothList->service.'%')->first();
         $service_rate_price=$service->basePrice;
@@ -250,6 +252,22 @@ class OrderController extends Controller
         ], Response::HTTP_BAD_REQUEST);
 
 
+    }
+
+
+    public function getOrderWeek(){
+        $order = Order::whereDate('created_at',[Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->get();;
+        return $order;
+    }
+
+    public function getOrderMonth(){
+        $order = Order::whereMonth('created_at', Carbon::now()->month);
+        return $order;
+    }
+
+    public function getOrderYear(){
+        $order = Order::whereYear('created_at', Carbon::now()->year);
+        return $order;
     }
 
     // public function makeInvoice(Request $request, Order $order){
@@ -930,23 +948,25 @@ class OrderController extends Controller
         ],Response::HTTP_BAD_REQUEST);
     }
 //
-//    public function acceptOrderForDeliver(Order $order){
-//        $employeePhone=Auth::user()->phone;
-//        $employee=Employee::where('phone','like','%'.$employeePhone.'%')->first();
-//        $order->deliver=$employee->name;
-//        if($order->save()){
-//            return response()->json([
-//                'success'=>true,
-//                'message'=>'Order has accept by '.$employee->name,
-//            ],Response::HTTP_OK);
-//        }
-//
-//        return response()->json([
-//            'success'=>true,
-//            'message'=>'accept order failed'
-//        ],Response::HTTP_BAD_REQUEST);
-//    }
-//
+    public function acceptOrderForDeliver(Order $order){
+        $employeePhone=Auth::user()->phone;
+        $employee=Employee::where('phone','like','%'.$employeePhone.'%')->first();
+        $order->deliver=$employee->name;
+        if($order->save()){
+            return response()->json([
+                'success'=>true,
+                'message'=>'Order has accept by '.$employee->name,
+            ],Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'success'=>true,
+            'message'=>'accept order failed'
+        ],Response::HTTP_BAD_REQUEST);
+    }
+
+
+
     public function getTodayOrder(){
         $order = Order::whereDate('created_at',Carbon::today())->get();
         return $order;
