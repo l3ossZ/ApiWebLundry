@@ -108,7 +108,16 @@ class DeliveryTimeController extends Controller
      */
     public function destroy(DeliveryTime $deliveryTime)
     {
-        //
+        if($deliveryTime->delete()){
+            return response()->json([
+                'success' => true,
+                'message' => "Employee  has been deleted"
+            ], Response::HTTP_OK);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => "Employee  delete failed"
+        ], Response::HTTP_BAD_REQUEST);
     }
 
     public function getNumOfWork(Request $request){
@@ -161,7 +170,61 @@ class DeliveryTimeController extends Controller
         ],Response::HTTP_OK);
     }
 
-    public function addDeliver(Request $request){
-        
+    public function addDeliver(DeliveryTime $deliveryTime,Request $request){
+        $deliveryTime->deliver=$request->get('deliver');
+        $deliveryTime->save();
+        $order = Order::where($request->get("name",$request->get("orderName")))->first();
+        $order->deliver=$request->get('deliver');
+        $order->save();
+
+        return response()->json([
+            'success'=>true,
+            'message'=>'add Deliver Complete '.$deliveryTime->id
+        ]);
+    }
+
+//    public function editDeliverTime(DeliveryTime $deliveryTime, Request $request){
+//        $cancel = "cancel";
+//        $deliveryTime->job=$cancel;
+//        if($deliveryTime->save()){
+//            $deliveryTime=new DeliveryTime();
+//            $deliveryTime->date=$request->get('date');
+//            $deliveryTime->time=$request->get('time');
+//            $deliveryTime->orderName=$request->get('orderName');
+//            $deliveryTime->job=$request->get('job');
+//            $deliver = "ยังไม่ลงทะเบียน" ;
+//            $deliveryTime->deliver=$deliver;
+//            if ($deliveryTime->save()) {
+//                return response()->json([
+//                    'success' => true,
+//                    'message' => 'Delivery Time updated with id ' . $deliveryTime->id
+//                ],Response::HTTP_OK);
+//            }
+//            return response()->json([
+//                'success' => false,
+//                'message' => 'Delivery Time update failed'
+//            ], Response::HTTP_BAD_REQUEST);
+//        }
+//        else{
+//            return response()->json([
+//                'success' => false,
+//                'message' => 'Delivery Time update failed'
+//            ], Response::HTTP_BAD_REQUEST);
+//        }
+
+//    }
+    public function cancelDelivery(DeliveryTime $deliveryTime){
+        $cancel = "cancel";
+        $deliveryTime->job = $cancel;
+        if ($deliveryTime->save()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Delivery Time Cancel with id ' . $deliveryTime->id
+                ],Response::HTTP_OK);
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Delivery Time Cancel failed'
+            ], Response::HTTP_BAD_REQUEST);
     }
 }

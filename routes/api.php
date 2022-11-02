@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\MemberPackageController;
 use App\Http\Controllers\Api\OrderController;
+use App\Models\DeliveryTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -73,6 +74,8 @@ Route::put('orders/{order}/acceptOrderForEmployee',[OrderController::class,'acce
 Route::put('orders/{order}/acceptOrderForDeliver',[OrderController::class,'acceptOrderForDeliver']);
 Route::get('/orders/getTodayOrder',[OrderController::class,'getTodayOrder']);
 Route::get('/orders/getDashboardData',[OrderController::class,'getDashboardData']);
+Route::put('orders/{order}/cancelOrder',[OrderController::class,'cancelOrder']);
+
 
 //Route::get('/orders/getIncomeToday',[OrderController::class,'getIncomeToday']);
 //Route::get('/orders/getNumOfCompleteOrder',[OrderController::class,'getNumOfCompleteOrder']);
@@ -84,7 +87,9 @@ Route::get('/orders/getDashboardData',[OrderController::class,'getDashboardData'
 // Route::apiResource('/reward_codes', \App\Http\Controllers\Api\RewardCodeController::class);
 Route::put('/delivery-time/getNumOfWork',[DeliveryTimeController::class,'getNumOfWork']);
 Route::put('/delivery-time/getAvailableInDateTime',[DeliveryTimeController::class,'getAvailableInDateTime']);
-
+Route::put('/delivery-time/{deliveryTime}/addDeliver',[DeliveryTimeController::class,'addDeliver']);
+Route::put('/delivery-time/{deliveryTime}/cancelDelivery',[DeliveryTimeController::class,'cancelDelivery']);
+//Route::put('delivery-time/{deliveryTIme}/editDeliverTime',[DeliveryTimeController::class,'editDeliverTime']);
 Route::apiResource('/orders',ApiOrderController::class);
 Route::apiResource('/customers',CustomerController::class);
 Route::apiResource('/address',AddressController::class);

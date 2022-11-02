@@ -162,6 +162,22 @@ class OrderController extends Controller
         //
     }
 
+    public function cancelOrder(Order $order){
+        $cancel = "cancel";
+        $order->status =  $cancel;
+        if($order->save()){
+            return response()->json([
+                'success' => true,
+                'message' => 'Cancel Order id ' . $order->id,
+            ],Response::HTTP_CREATED);
+        }
+        return response()->json([
+
+            'success' => false,
+            'message' => 'Cancel Order failed'
+        ], Response::HTTP_BAD_REQUEST);
+    }
+
     public function storeClothList(Request $request, Order $order){
         $clothList=new ClothList();
         $clothList->category=$request->get('category');
