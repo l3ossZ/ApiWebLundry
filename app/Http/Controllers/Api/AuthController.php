@@ -188,7 +188,7 @@ class AuthController extends Controller
             $customer->email=$request->get('email');
             $customer->pwd=Hash::make($request->get('password'));
             $customer->isMembership=false;
-            $customer->memService=null;
+            $customer->memService="-";
             $customer->memCredit=0;
             $customer->save() ;
         }
@@ -200,6 +200,8 @@ class AuthController extends Controller
 
         return response($response,201);
     }
+
+
 
 //    public function register(Request $request) {
 ////        $validator = Validator::make($request->all(), [

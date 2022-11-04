@@ -112,7 +112,7 @@ class CustomerController extends Controller
         if($request->has('name')) $user->name=$request->get('name');
         if($request->has('phone')) $user->phone=$request->get('phone');
         if($request->has('email')) $user->email=$request->get('email');
-        $user->realrole="customer";
+        $user->realrole="CUSTOMER";
         if($request->has('pwd')) $user->password=bcrypt($request->get('pwd'));
         $user->save();
 
@@ -192,6 +192,26 @@ class CustomerController extends Controller
             'success'=>true,
             'message'=>'add Member Service Complete '.$customer->id
         ]);
+    }
+
+    public function payMember(Customer $customer,Request $request){
+        $price = $request->get('pay');
+        $customer->memCredit = $customer->memCredit - $price ;
+        if($customer->memCredit <= 0){
+            $customer->memService = "" ;
+            $customer->isMembership = 0 ;
+        }
+        if ($customer->save()) {
+            return response()->json([
+                'success' => true,
+                'message' => $customer->memCredit . ' left off',
+                'customer_id' =>$customer->id
+            ],Response::HTTP_OK);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Member pay failed'
+        ], Response::HTTP_BAD_REQUEST);
     }
 
 //    public function getNumOfCustomer(){

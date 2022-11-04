@@ -51,25 +51,24 @@ class OrderController extends Controller
         $order->pick_time=$request->get('pick_time') ?? null;
         $order->deli_date=$request->get('deli_date') ?? null;
         $order->deli_time=$request->get('deli_time') ?? null;
-        $order->address=$request->get('address');
+        $order->address=$request->get('address') ?? null;
         $order->status="order in";
         $order->responder=$request->get('responder');
-        $order->deliver=$request->get('deliver') ?? null;
+        $notRegis = "ยังไม่ลงทะเบียน" ;
+        $order->deliver=$notRegis;
+        if($order->address == null){
+            $order->deliver = null ;
+        }
         $order->pay_method=$request->get('pay_method') ?? "เงินสด";
         $order->pick_ser_charge=$request->get('pick_ser_charge') ?? 0;
         $order->deli_ser_charge=$request->get('deli_ser_charge') ?? 0;
         $order->is_membership_or=$request->get('is_membership_or') ?? false;
         $order->cus_phone=$request->get('cus_phone');
-
         $employee=Employee::where('name','like','%'.$request->get('responder').'%')->first();
         $order->employee_id=$employee->id;
 
 
-
-
-
         if ($order->save()) {
-
             $customer=Customer::where('phone','like','%'.$request->get('cus_phone').'%')->first();
             // $new_order=Order::where('cus_phone','like','%'.$request->get('cus_phone').'%')->first();
             // $customer->orders()->attach($new_order->id);
@@ -188,7 +187,9 @@ class OrderController extends Controller
         $service_rate_price=$service->basePrice;
         $category=Category::where('clothType','like','%'.$request->get('category').'%')->where('service_rate_id','like','%'.$service->id.'%')->first();
         $category_addOn_price=$category->addOnPrice;
-        $order->total=$order->total+(($service_rate_price+$category_addOn_price)*$request->get('quantity'));
+        if($order->is_membership_or == false){
+            $order->total=$order->total+(($service_rate_price+$category_addOn_price)*$request->get('quantity'));
+        }
 
         // $clothList->service_rate_id=$service_rate->id;
         if($clothList->save()){
@@ -327,19 +328,25 @@ class OrderController extends Controller
         $order->service=$request->get('service');
         $order->pick_date=$request->get('pick_date') ?? null;
         $order->pick_time=$request->get('pick_time') ?? null;
-        $order->deli_date=$request->get('deli_date') ?? null;
-        $order->deli_time=$request->get('deli_time') ?? null;
+//        $order->deli_date=$request->get('deli_date') ?? null;
+//        $order->deli_time=$request->get('deli_time') ?? null;
         $order->address=$request->get('address');
         // $order->responder=$request->get('responder') ?? null;
         // $order->deliver=$request->get('deliver') ?? null;
         $order->pay_method=$request->get('pay_method') ?? "เงินสด";
-        $order->pick_ser_charge=$request->get('pick_ser_charge') ?? null;
-        $order->deli_ser_charge=$request->get('deli_ser_charge') ?? null;
-        // $order->is_membership_or=$request->get('is_membership_or') ?? null;
 
-        // $employee=Employee::where('name','like','%'.$request->get('responder').'%')->first();
-        // $order->employee_id=$employee->id;
+//        $order->pick_ser_charge=$request->get('pick_ser_charge') ?? null;
+//        $order->deli_ser_charge=$request->get('deli_ser_charge') ?? null;
+         $order->is_membership_or=$request->get('is_membership_or') ?? false;
+
+         $employee=Employee::where('name','like','%'.$request->get('responder').'%')->first();
+         $order->employee_id=$employee->id;
+
         $order->cus_phone=$userPhone;
+        $notRegis = "ยังไม่ลงทะเบียน" ;
+        $order->deliver=$notRegis;
+        $order->responder=$notRegis;
+        $order->deliver=$notRegis;
 
 
         if ($order->save()) {
@@ -361,6 +368,7 @@ class OrderController extends Controller
         ], Response::HTTP_BAD_REQUEST);
 
     }
+
 
     public function generateQr(Order $order){
         // $pp = new \KS\PromptPay();
@@ -467,7 +475,7 @@ class OrderController extends Controller
             }
         }
         if(str_contains($order->name,'ORA')){
-            if($order->status=='Order Add'){
+            if($order->status=='order add'){
                 $order->status="order-confirm";
                 $order->save();
                 return response()->json([
@@ -596,8 +604,6 @@ class OrderController extends Controller
             foreach($clothLists as $clothlist){
                 $amount=$amount+$clothlist->quantity;
             }
-            // App Delivery
-            if($order->deli_date != null && $order->deli_time != null && $order->pick_date != null && $order->pick_time != null){
                 if($amount<=15){
                     $order->deli_ser_charge=15;
                     $order->pick_ser_charge=15;
@@ -621,7 +627,6 @@ class OrderController extends Controller
                     $order->pick_ser_charge=0;
                     $order->save();
                 }
-            }
         }
         // No Pick/Deli
         else{
@@ -945,12 +950,45 @@ class OrderController extends Controller
 //        ]);
 //    }
 
+    public function updateAppOrder(Order $order, Request $request){
+        $order->deli_date=$request->get('deli_date');
+        $order->deli_time=$request->get('deli_time');
+
+        $order->save();
+
+
+        $jovv = "ส่งผ้า";
+        $deliv = "ยังไม่ลงทะเบียน";
+        $deliveryTime=new DeliveryTime();
+        $deliveryTime->date= $order->deli_date;
+        $deliveryTime->time= $order->deli_time;
+        $deliveryTime->orderName= $order->name;
+        $deliveryTime->job= $jovv;
+        $deliveryTime->deliver=$deliv;
+
+        $deliveryTime->save();
+    }
+
     public function acceptOrderForEmployee(Order $order){
         $employeePhone=Auth::user()->phone;
         $employee=Employee::where('phone','like','%'.$employeePhone.'%')->first();
         $order->employee_id=$employee->id;
         $order->responder=$employee->name;
         $order->status='order-confirm';
+
+//        $order->pick_date=$request->get('pick_date') ?? null;
+//        $order->pick_time=$request->get('pick_time') ?? null;
+        $jovv = "รับผ้า";
+        $deliv = "ยังไม่ลงทะเบียน";
+        $deliveryTime=new DeliveryTime();
+        $deliveryTime->date= $order->pick_date;
+        $deliveryTime->time= $order->pick_time;
+        $deliveryTime->orderName= $order->name;
+        $deliveryTime->job= $jovv;
+        $deliveryTime->deliver=$deliv;
+
+        $deliveryTime->save();
+
         if($order->save()){
             return response()->json([
                 'success'=>true,

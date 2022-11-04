@@ -63,6 +63,7 @@ Route::put('/orders/{order}/nextStatus',[OrderController::class,'nextStatus']);
 Route::get('/customers/{customer}/getCustomerAddress',[CustomerController::class,'getCustomerAddress']);
 Route::get('/customers/getCustomerAddressAuth',[CustomerController::class,'getCustomerAddressAuth']);
 Route::put('/customers/{customer}/addMemberService',[CustomerController::class,'addMemberService']);
+Route::put("/customers/{customer}/payMember",[CustomerController::class,'payMember']) ;
 //Route::get('/customers/getNumOfCustomer',[CustomerController::class,'getNumOfCustomer']);
 //Route::get('/customers/getNumOfMember',[CustomerController::class,'getNumOfMember']);
 Route::get('laundry/{laundry}/getName',[LaundryController::class,'getName']);
@@ -75,6 +76,10 @@ Route::put('orders/{order}/acceptOrderForDeliver',[OrderController::class,'accep
 Route::get('/orders/getTodayOrder',[OrderController::class,'getTodayOrder']);
 Route::get('/orders/getDashboardData',[OrderController::class,'getDashboardData']);
 Route::put('orders/{order}/cancelOrder',[OrderController::class,'cancelOrder']);
+Route::put('/orders/{order}/calDeliApp',[OrderController::class,'calDeliApp']);
+Route::put('/orders/{order}/updateAppOrder',[OrderController::class,'updateAppOrder']);
+
+Route::put('/employees/changePassword',[EmployeeController::class,'changePassword']);
 
 
 //Route::get('/orders/getIncomeToday',[OrderController::class,'getIncomeToday']);

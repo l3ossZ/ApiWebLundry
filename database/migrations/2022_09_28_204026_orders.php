@@ -31,10 +31,10 @@ return new class extends Migration
             $table->double('pick_ser_charge')->nullable()->default(0);
             $table->double('deli_ser_charge')->nullable()->default(0);
             $table->double('total')->default(0);
-            $table->string('status')->default("Order Add");
+            $table->string('status')->default("order add");
             $table->boolean('is_membership_or')->default(false);
             $table->string('cus_phone');
-            $table->foreignIdFor(Employee::class);
+            $table->foreignIdFor(Employee::class)->nullable()->constrained();
             $table->softDeletes();
         });
     }

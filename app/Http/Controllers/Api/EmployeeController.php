@@ -14,7 +14,7 @@ class EmployeeController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api');
+        $this->middleware('auth:api', ['except' => 'changePassword']);
     }
     /**
      * Display a listing of the resource.
@@ -142,6 +142,7 @@ class EmployeeController extends Controller
         $phone=$employee->phone;
         $user=User::where('phone','like','%'.$phone.'%')->first()->delete();
         if($employee->delete()){
+            $user->delete();
             return response()->json([
                 'success' => true,
                 'message' => "Employee {$phone} has been deleted"
@@ -151,5 +152,32 @@ class EmployeeController extends Controller
             'success' => false,
             'message' => "Employee {$phone} delete failed"
         ], Response::HTTP_BAD_REQUEST);
+    }
+
+    public function changePassword(Request $request){
+        $employee = Employee::where('ID_Card','like','%'.$request->get('ID_Card').'%')->first();
+        if($request->get('ID_Card') == $employee->ID_Card){
+            $user=User::where('email','like','%'.$employee->email.'%')->first();
+            if($request->has('password')) $employee->password=bcrypt($request->get('password'));
+            if($request->has('password')) $user->password=bcrypt($request->get('password'));
+            $user->save();
+            if ($employee->save()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Change password Complete' . $employee->id,
+                    'employee_id' =>$employee->id
+                ],Response::HTTP_OK);
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Change password Faild'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+        else{
+            return response()->json([
+                'success' => false,
+                'message' => 'Change password Faild'
+            ], Response::HTTP_BAD_REQUEST);
+        }
     }
 }
