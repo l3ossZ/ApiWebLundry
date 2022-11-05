@@ -101,9 +101,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-
         $clothList=$order->clothLists;
-
         return $order;
     }
 
@@ -328,20 +326,11 @@ class OrderController extends Controller
         $order->service=$request->get('service');
         $order->pick_date=$request->get('pick_date') ?? null;
         $order->pick_time=$request->get('pick_time') ?? null;
-//        $order->deli_date=$request->get('deli_date') ?? null;
-//        $order->deli_time=$request->get('deli_time') ?? null;
         $order->address=$request->get('address');
-        // $order->responder=$request->get('responder') ?? null;
-        // $order->deliver=$request->get('deliver') ?? null;
         $order->pay_method=$request->get('pay_method') ?? "เงินสด";
-
-//        $order->pick_ser_charge=$request->get('pick_ser_charge') ?? null;
-//        $order->deli_ser_charge=$request->get('deli_ser_charge') ?? null;
-         $order->is_membership_or=$request->get('is_membership_or') ?? false;
-
-         $employee=Employee::where('name','like','%'.$request->get('responder').'%')->first();
-         $order->employee_id=$employee->id;
-
+        $order->is_membership_or=$request->get('is_membership_or') ?? false;
+        $employee=Employee::where('name','like','%'.$request->get('responder').'%')->first();
+        $order->employee_id=$employee->id;
         $order->cus_phone=$userPhone;
         $notRegis = "ยังไม่ลงทะเบียน" ;
         $order->deliver=$notRegis;

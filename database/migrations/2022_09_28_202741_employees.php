@@ -11,24 +11,24 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('employees',function(Blueprint $table){
-            $table->id();
-            $table->string('name');
-            $table->string('phone')->unique();
-            $table->string('email')->unique();
-            $table->string('role');
-            $table->string('password');
-            $table->double('salary')->nullable()->default(0);
-            $table->string('address');
-            $table->string('ID_Card')->unique();
-            $table->string('bank_account_number')->unique();
-            $table->string('bank_name');
-            $table->timestamps();
-            $table->softDeletes();
-        });
-    }
+        public function up()
+        {
+            Schema::create('employees',function(Blueprint $table){
+                $table->id();
+                $table->string('name');
+                $table->string('phone')->unique();
+                $table->string('email')->unique();
+                $table->string('role');
+                $table->string('password');
+                $table->double('salary')->nullable()->default(0);
+                $table->string('address');
+                $table->string('ID_Card')->unique();
+                $table->string('bank_account_number')->unique();
+                $table->string('bank_name');
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        }
 
     /**
      * Reverse the migrations.

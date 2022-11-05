@@ -33,14 +33,10 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $category=new Category();
         $category->clothType=$request->get('clothType');
         $category->addOnPrice=$request->get('addOnPrice');
         $category->service_rate_id=$request->get('service_rate_id');
-        // ServiceRate::find($category->service_rate_id)->clothList()->save($category);
-
-
         if ($category->save()) {
             return response()->json([
                 'success' => true,
@@ -52,11 +48,6 @@ class CategoryController extends Controller
             'success' => false,
             'message' => 'Category creation failed'
         ], Response::HTTP_BAD_REQUEST);
-
-
-
-
-
     }
 
     /**
@@ -80,7 +71,6 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
         $category->service_rate_id=$request->get('service_rate_id');
         $category->clothType=$request->get('clothType');
         $category->addOnPrice=$request->get('addOnPrice');
@@ -106,7 +96,6 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
         $clothType=$category->clothType;
         if($category->delete()){
             return response()->json([
@@ -125,10 +114,9 @@ class CategoryController extends Controller
         $service_rate=ServiceRate::where('service','like','%'.$service.'%')->first();
         $service_rate_id=$service_rate->id;
         $category=Category::where('service_rate_id','like','%'.$service_rate_id.'%')->get();
-
         return $category;
     }
 
-    
+
 
 }

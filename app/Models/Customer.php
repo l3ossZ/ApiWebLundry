@@ -18,15 +18,4 @@ class Customer extends Model
     public function address(){
         return $this->belongsToMany(Address::class);
     }
-
-    public function serviceRate(){
-        return $this->belongsTo(ServiceRate::class);
-    }
-
-    // public function scopeActive(){
-    //     return
-    // }
-
-
-
 }
