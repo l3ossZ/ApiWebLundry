@@ -7,6 +7,8 @@ use App\Models\ServiceRate;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+
+
 class ServiceRateController extends Controller
 {
     public function __construct()

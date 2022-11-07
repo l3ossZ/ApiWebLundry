@@ -8,6 +8,8 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+
+
 class InvoiceReceiptController extends Controller
 {
     /**

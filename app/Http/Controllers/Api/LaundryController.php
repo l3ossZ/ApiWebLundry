@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+
+
 class LaundryController extends Controller
 {
     public function __construct()

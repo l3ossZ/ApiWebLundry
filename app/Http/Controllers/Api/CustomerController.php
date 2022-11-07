@@ -14,22 +14,48 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use PHPOpenSourceSaver\JWTAuth\Claims\Custom;
 
+
+
 class CustomerController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        $this->middleware('auth:api' ,['except' => ['registerOldCustomer']]);
     }
+
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     *     path="/customers",
+     *     operationId="customerAll",
+     *     tags={"Customer"},
+     *     security={
+     *           {"bearerAuth": {}}
+     *       },
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="The page number",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Everything is fine",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/CustomerResource"),
+     *             )
+     *         )
+     *     ),
+     * )
      */
-    public function index()
 
-    {
-
-
+    public function index(){
         $customer=Customer::get();
         return CustomerResource::collection($customer);
         // return $customer;
@@ -42,6 +68,29 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+
+     /**
+      * @OA\Post(
+     *     path="/customers",
+     *     operationId="customerCreate",
+     *     tags={"Customer"},
+     *     summary="Create yet another customer record",
+     *     security={
+     *           {"bearerAuth": {}}
+     *       },
+     *     @OA\Response(
+     *         response="200",
+     *         description="Everything is fine",
+     *         @OA\JsonContent(ref="#/components/schemas/CustomerResource")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/CustomerRequest")
+     *     ),
+     * )
+      */
+
     public function store(Request $request)
     {
         //
@@ -83,6 +132,36 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
+
+
+
+     /**
+     * @OA\Get(
+     *     path="/customers/{id}",
+     *     operationId="customerGetId",
+     *     tags={"Customer"},
+     *     security={
+     *           {"bearerAuth": {}}
+     *       },
+     *     summary="Get Customer by ID",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="The ID of customer",
+     *         required=true,
+     *         example="1",
+     *         @OA\Schema(
+     *             type="integer",
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Everything is fine",
+     *         @OA\JsonContent(ref="#/components/schemas/CustomerResource")
+     *     ),
+     * )
+      */
+
     public function show(Customer $customer)
     {
 
@@ -97,6 +176,37 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
+
+     /**
+      * @OA\Put(
+     *     path="/customers/{id}",
+     *     operationId="customerUpdate",
+     *     tags={"Customer"},
+     *     summary="Update Customer by ID",
+     *     security={
+     *           {"bearerAuth": {}}
+     *       },
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="The ID of customer",
+     *         required=true,
+     *         example="1",
+     *         @OA\Schema(
+     *             type="integer",
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Everything is fine",
+     *         @OA\JsonContent(ref="#/components/schemas/CustomerResource")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/CustomerRequest")
+     *     ),
+     * )
+      */
     public function update(Request $request, Customer $customer)
     {
         //
@@ -228,4 +338,15 @@ class CustomerController extends Controller
 //            'numOfMem' => $n
 //        ],Response::HTTP_OK);
 //    }
+
+    public function registerOldCustomer(Customer $customer,Request $request){
+        $user=User::where('name','like','%'.$customer->name .'%')->first();
+        $customer->pwd=bcrypt($request->get('password'));
+        $customer->email=$request->get('email');
+        $user->email=$request->get('email');
+        $user->password=$customer->pwd;
+        $user->save();
+        $customer->save();
+    }
+
 }

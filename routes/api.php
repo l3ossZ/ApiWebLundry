@@ -109,6 +109,7 @@ Route::apiResource('/delivery-time',DeliveryTimeController::class);
 Route::apiResource('/invoice-receipt',InvoiceReceiptController::class);
 Route::apiResource('/customer_has_address',CustomerHasAddressController::class);
 Route::apiResource('/member-package',MemberPackageController::class);
+Route::put('/customers/{customer}/registerOldCustomer',[CustomerController::class,'registerOldCustomer']);
 
 
 
@@ -121,7 +122,9 @@ Route::group([
     Route::post('register', [AuthController::class, 'register']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('getOldCustomerId',[AuthController::class,'getOldCustomerId']);
     Route::post('me', [AuthController::class, 'me']);
+    Route::post('customerGetMe',[AuthController::class,'customerGetMe']);
 });
 // Route::group(['middleware'=>'auth:sanctum'],function(){
 

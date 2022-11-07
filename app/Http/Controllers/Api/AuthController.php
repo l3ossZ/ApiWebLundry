@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
 
+
+
 class AuthController extends Controller
 {
     // public function register(Request $request){
@@ -59,14 +61,53 @@ class AuthController extends Controller
     //  */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register']]);
+        $this->middleware('auth:api', ['except' => ['login','register','getOldCustomerId']]);
     }
 
     /**
+
      * Get a JWT via given credentials.
      *
      * @return \Illuminate\Http\JsonResponse
      */
+    /**
+        * @OA\Post(
+        * path="/auth/login",
+        * operationId="authLogin",
+        * tags={"Login"},
+        * summary="User Login",
+        * description="Login User Here",
+        *     @OA\RequestBody(
+        *         @OA\JsonContent(),
+        *         @OA\MediaType(
+        *            mediaType="multipart/form-data",
+        *            @OA\Schema(
+        *               type="object",
+        *               required={"email", "password"},
+        *               @OA\Property(property="email", type="email"),
+        *               @OA\Property(property="password", type="password")
+        *            ),
+        *        ),
+        *    ),
+        *      @OA\Response(
+        *          response=201,
+        *          description="Login Successfully",
+        *          @OA\JsonContent()
+        *       ),
+        *      @OA\Response(
+        *          response=200,
+        *          description="Login Successfully",
+        *          @OA\JsonContent()
+        *       ),
+        *      @OA\Response(
+        *          response=422,
+        *          description="Unprocessable Entity",
+        *          @OA\JsonContent()
+        *       ),
+        *      @OA\Response(response=400, description="Bad request"),
+        *      @OA\Response(response=404, description="Resource Not Found"),
+        * )
+    */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -231,5 +272,31 @@ class AuthController extends Controller
 //            'user' => $user
 //        ], 201);
 //    }
+    public function getOldCustomerId(Request $request){
+        $customer=Customer::where('phone',$request->get('phone'))->first();
+        if ($customer == null){
+            return response()->json([
+                'user' => "not found"
+            ], 201);
+        }
+        else if($customer->pwd == null){
+            return response()->json([
+            'user' => $customer->id,
+                'name' => $customer->name
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'user' => "Existed"
+            ], 202);
+        }
+    }
+
+    public function customerGetMe(){
+        $user=auth()->user();
+        $userPhone=$user->phone;
+        $customer=Customer::where('phone',$userPhone)->first();
+        return $customer;
+    }
 
 }

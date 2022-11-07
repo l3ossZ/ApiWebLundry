@@ -8,6 +8,8 @@ use App\Models\ServiceRate;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+
+
 class CategoryController extends Controller
 {
     public function __construct()
