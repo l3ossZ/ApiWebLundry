@@ -81,6 +81,9 @@ Route::put('/orders/{order}/updateAppOrder',[OrderController::class,'updateAppOr
 
 Route::put('/employees/changePassword',[EmployeeController::class,'changePassword']);
 
+Route::post('/orders/getPreviewClothList',[OrderController::class,'getPreviewClothList']);
+Route::post('/orders/getReport',[OrderController::class,'getReport']);
+
 
 //Route::get('/orders/getIncomeToday',[OrderController::class,'getIncomeToday']);
 //Route::get('/orders/getNumOfCompleteOrder',[OrderController::class,'getNumOfCompleteOrder']);

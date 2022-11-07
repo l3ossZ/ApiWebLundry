@@ -285,6 +285,36 @@ class OrderController extends Controller
         return $order;
     }
 
+    public function getReport(Request $request){
+        $from = date($request->get('from'));
+        $to = date($request->get('to'));
+
+        $report = Order::whereBetween('created_at', [$from, $to])->get();
+
+        return $report;
+    }
+
+    public function getPreviewClothList(Request $request){
+
+        //        $deliveryTime=DeliveryTime::where('date','like','%'.$deli_date.'%')
+//        ->where('time','like','%'.$deli_time.'%')
+//        ->where('job','like','%'.$job.'%')->first();
+
+        $cloth = ClothList::where('id',$request->get('cl_id'))->first();
+        $service = ServiceRate::where('service',$cloth->service)->first();
+        $basePrice = $service->basePrice ;
+        $addOnPrice = Category::where('service_rate_id',$service->id)->where('clothType',$cloth->category)->first()->addOnPrice;
+
+
+        return response()->json([
+            'service'=> $cloth->service,
+            'clothType'=> $cloth->category,
+            'quantity'=> $cloth->quantity,
+            'pricePerU' => $addOnPrice+$basePrice,
+            'amount' => ($addOnPrice+$basePrice)*$cloth->quantity
+        ],Response::HTTP_OK);
+    }
+
     // public function makeInvoice(Request $request, Order $order){
     //     $inv=new Invoice_receipt();
     //     $inv->EMP_name=$order->respond_EMP;
