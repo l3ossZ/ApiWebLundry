@@ -16,7 +16,7 @@ class DeliveryTimeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        $this->middleware('auth:api', ['except' => ['getAvailableInDateTime']]);
     }
     /**
      * Display a listing of the resource.
