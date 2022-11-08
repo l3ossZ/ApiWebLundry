@@ -21,7 +21,7 @@
         "/auth/login": {
             "post": {
                 "tags": [
-                    "Login"
+                    "Auth"
                 ],
                 "summary": "User Login",
                 "description": "Login User Here",
@@ -84,23 +84,48 @@
                 }
             }
         },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Create yet another user record",
+                "operationId": "userCreate",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AuthRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Everything is fine",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/customers": {
             "get": {
                 "tags": [
                     "Customer"
                 ],
                 "operationId": "customerAll",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "The page number",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Everything is fine",
@@ -240,10 +265,197 @@
                     }
                 ]
             }
+        },
+        "/employees": {
+            "get": {
+                "tags": [
+                    "Employee"
+                ],
+                "operationId": "employeeAll",
+                "responses": {
+                    "200": {
+                        "description": "Everything is fine",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EmployeeResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Create yet another employee record",
+                "operationId": "employeeCreate",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmployeeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Everything is fine",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeeResource"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/employees/{id}": {
+            "get": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Get Employee by ID",
+                "operationId": "employeeGetId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of employee",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Everything is fine",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeeResource"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Update Employee by ID",
+                "operationId": "employeeUpdate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of employee",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmployeeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Everything is fine",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeeResource"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
         "schemas": {
+            "AuthRequest": {
+                "properties": {
+                    "name": {
+                        "title": "name",
+                        "description": "Name of key for storring",
+                        "type": "string",
+                        "example": "random"
+                    },
+                    "email": {
+                        "title": "email",
+                        "description": "email of key for storring",
+                        "type": "string",
+                        "example": "email@example.com"
+                    },
+                    "phone": {
+                        "title": "phone",
+                        "description": "Name of key for storring",
+                        "type": "string",
+                        "example": "random"
+                    },
+                    "password": {
+                        "title": "password",
+                        "description": "Password of key for storring",
+                        "type": "string",
+                        "example": "password"
+                    },
+                    "role": {
+                        "title": "role",
+                        "description": "role of key for storring",
+                        "type": "string",
+                        "example": "CUSTOMER"
+                    },
+                    "realrole": {
+                        "title": "realrole",
+                        "description": "realrole of key for storring",
+                        "type": "string",
+                        "example": "CUSTOMER"
+                    }
+                },
+                "type": "object"
+            },
             "CustomerRequest": {
                 "properties": {
                     "name": {
@@ -273,7 +485,75 @@
                 },
                 "type": "object"
             },
-            "CustomerResource": {}
+            "EmployeeRequest": {
+                "properties": {
+                    "name": {
+                        "title": "name",
+                        "description": "Name of key for storring",
+                        "type": "string",
+                        "example": "random"
+                    },
+                    "phone": {
+                        "title": "phone",
+                        "description": "Phone of key for storring",
+                        "type": "string",
+                        "example": "0981273812"
+                    },
+                    "email": {
+                        "title": "email",
+                        "description": "email of key for storring",
+                        "type": "string",
+                        "example": "me@example.com"
+                    },
+                    "password": {
+                        "title": "password",
+                        "description": "Name of key for storring",
+                        "type": "string",
+                        "example": "password"
+                    },
+                    "salary": {
+                        "title": "salary",
+                        "description": "salary of key for storring",
+                        "type": "number",
+                        "format": "double",
+                        "example": "10000"
+                    },
+                    "role": {
+                        "title": "role",
+                        "description": "role of key for storring",
+                        "type": "string",
+                        "example": "random"
+                    },
+                    "address": {
+                        "title": "address",
+                        "description": "address of key for storring",
+                        "type": "string",
+                        "example": "115/112 ถ...."
+                    },
+                    "ID_Card": {
+                        "title": "ID_Card",
+                        "description": "ID_Card of key for storring",
+                        "type": "string",
+                        "example": "111111111111111"
+                    },
+                    "bank_account": {
+                        "title": "bank_account",
+                        "description": "bank_account of key for storring",
+                        "type": "string",
+                        "example": "1112231231231"
+                    },
+                    "bank_name": {
+                        "title": "bank_name",
+                        "description": "bank_name of key for storring",
+                        "type": "string",
+                        "example": "SCB"
+                    }
+                },
+                "type": "object"
+            },
+            "CustomerResource": {},
+            "EmployeeResource": {},
+            "UserResource": {}
         },
         "securitySchemes": {
             "bearerAuth": {

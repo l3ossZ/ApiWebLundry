@@ -32,15 +32,6 @@ class CustomerController extends Controller
      *     security={
      *           {"bearerAuth": {}}
      *       },
-     *     @OA\Parameter(
-     *         name="page",
-     *         in="query",
-     *         description="The page number",
-     *         required=false,
-     *         @OA\Schema(
-     *             type="integer",
-     *         )
-     *     ),
      *     @OA\Response(
      *         response="200",
      *         description="Everything is fine",

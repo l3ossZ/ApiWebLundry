@@ -23,6 +23,28 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     /**
+     * @OA\Get(
+     *     path="/employees",
+     *     operationId="employeeAll",
+     *     tags={"Employee"},
+     *     security={
+     *           {"bearerAuth": {}}
+     *       },
+     *     @OA\Response(
+     *         response="200",
+     *         description="Everything is fine",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/EmployeeResource"),
+     *             )
+     *         )
+     *     ),
+     * )
+     */
     public function index()
     {
         $employees=Employee::get();
@@ -35,6 +57,27 @@ class EmployeeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+     /**
+      * @OA\Post(
+     *     path="/employees",
+     *     operationId="employeeCreate",
+     *     tags={"Employee"},
+     *     summary="Create yet another employee record",
+     *     security={
+     *           {"bearerAuth": {}}
+     *       },
+     *     @OA\Response(
+     *         response="200",
+     *         description="Everything is fine",
+     *         @OA\JsonContent(ref="#/components/schemas/EmployeeResource")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/EmployeeRequest")
+     *     ),
+     * )
+      */
     public function store(Request $request)
     {
         $employee=new Employee();
@@ -80,6 +123,33 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
+
+     /**
+     * @OA\Get(
+     *     path="/employees/{id}",
+     *     operationId="employeeGetId",
+     *     tags={"Employee"},
+     *     security={
+     *           {"bearerAuth": {}}
+     *       },
+     *     summary="Get Employee by ID",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="The ID of employee",
+     *         required=true,
+     *         example="1",
+     *         @OA\Schema(
+     *             type="integer",
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Everything is fine",
+     *         @OA\JsonContent(ref="#/components/schemas/EmployeeResource")
+     *     ),
+     * )
+      */
     public function show(Employee $employee)
     {
         //
@@ -93,6 +163,37 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
+
+     /**
+      * @OA\Put(
+     *     path="/employees/{id}",
+     *     operationId="employeeUpdate",
+     *     tags={"Employee"},
+     *     summary="Update Employee by ID",
+     *     security={
+     *           {"bearerAuth": {}}
+     *       },
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="The ID of employee",
+     *         required=true,
+     *         example="1",
+     *         @OA\Schema(
+     *             type="integer",
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Everything is fine",
+     *         @OA\JsonContent(ref="#/components/schemas/EmployeeResource")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/EmployeeRequest")
+     *     ),
+     * )
+      */
     public function update(Request $request, Employee $employee)
     {
         $user=User::where('email','like','%'.$employee->email.'%')->first();

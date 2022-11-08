@@ -4,6 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+     /**
+      * @OA\Schema()
+      */
 class EmployeeResource extends JsonResource
 {
     /**

@@ -3,6 +3,9 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+/**
+      * @OA\Schema()
+      */
 
 class UserResource extends JsonResource
 {
@@ -17,8 +20,10 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'email' => $this->email,
-            'point' => $this->point,
-            'image_path' => $this->image_path,
+            'name'=>$this->name,
+            'phone' => $this->phone,
+            'realrole' => $this->realrole,
+            'role'=>$this->role
         ];
     }
 }

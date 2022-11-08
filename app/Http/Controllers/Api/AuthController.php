@@ -74,7 +74,7 @@ class AuthController extends Controller
         * @OA\Post(
         * path="/auth/login",
         * operationId="authLogin",
-        * tags={"Login"},
+        * tags={"Auth"},
         * summary="User Login",
         * description="Login User Here",
         *     @OA\RequestBody(
@@ -174,7 +174,26 @@ class AuthController extends Controller
         ]);
     }
 
-
+    /**
+      * @OA\Post(
+     *     path="/auth/register",
+     *     operationId="userCreate",
+     *     tags={"Auth"},
+     *     summary="Create yet another user record",
+     *     security={
+     *           {"bearerAuth": {}}
+     *       },
+     *     @OA\Response(
+     *         response="200",
+     *         description="Everything is fine",
+     *         @OA\JsonContent(ref="#/components/schemas/UserResource")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/AuthRequest")
+     *     ),
+     * )
+      */
 
     public function register(Request $request){
         $validator = Validator::make($request->all(), [
