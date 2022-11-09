@@ -1114,6 +1114,13 @@ class OrderController extends Controller
         ],Response::HTTP_OK);
     }
 
+    public function getOrderWithAuth(){
+        $user=auth()->user();
+        $userPhone=$user->phone;
+        $orders=Order::where('cus_phone',$userPhone)->get();
+        return $orders;
+    }
+
 
 
 

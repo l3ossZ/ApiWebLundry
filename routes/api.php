@@ -83,6 +83,7 @@ Route::put('/employees/changePassword',[EmployeeController::class,'changePasswor
 
 Route::post('/orders/getPreviewClothList',[OrderController::class,'getPreviewClothList']);
 Route::post('/orders/getReport',[OrderController::class,'getReport']);
+Route::post('/orders/getOrders',[OrderController::class,'getOrderWithAuth']);
 
 
 //Route::get('/orders/getIncomeToday',[OrderController::class,'getIncomeToday']);
@@ -110,6 +111,7 @@ Route::apiResource('/invoice-receipt',InvoiceReceiptController::class);
 Route::apiResource('/customer_has_address',CustomerHasAddressController::class);
 Route::apiResource('/member-package',MemberPackageController::class);
 Route::put('/customers/{customer}/registerOldCustomer',[CustomerController::class,'registerOldCustomer']);
+
 
 
 

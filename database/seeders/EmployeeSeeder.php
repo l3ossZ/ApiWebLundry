@@ -42,13 +42,13 @@ class EmployeeSeeder extends Seeder
 
         $employee = new Employee();
         $employee->name="";
-        $employee->phone="0896789567";
+        $employee->phone="0896781568";
         $employee->email="pakorn@mail.com";
         $employee->role="EMPLOYEE";
         $employee->address="69/12 ทรายทองนิเวศน์ ซอย 7 ท่าทราย อำเภอเมืองนนทบุรี นนทบุรี 11000";
         $employee->password=Hash::make("password");
-        $employee->ID_Card="1102422034123";
-        $employee->bank_account_number="2394029323";
+        $employee->ID_Card="1102421034123";
+        $employee->bank_account_number="2314029323";
         $employee->bank_name="กสิกรไทย";
         $employee->salary=18000.00;
         $employee->save();
@@ -59,7 +59,7 @@ class EmployeeSeeder extends Seeder
         $user->password=Hash::make("password");
         $user->role="EMPLOYEE";
         $user->realrole="EMPLOYEE";
-        $user->phone="0896789567";
+        $user->phone="0896781568";
         $user->save() ;
 
         // Deliver
@@ -70,8 +70,8 @@ class EmployeeSeeder extends Seeder
         $employee->role="DELIVER";
         $employee->address="2 ซอย รณสิทธิพิชัย 8/3 ตำบล ตลาดขวัญ อำเภอเมืองนนทบุรี นนทบุรี 11000";
         $employee->password=Hash::make("password");
-        $employee->ID_Card="5505855859585";
-        $employee->bank_account_number="2593415869";
+        $employee->ID_Card="5505815859585";
+        $employee->bank_account_number="2593215869";
         $employee->bank_name="ไทยภาณิข";
         $employee->salary=18000.00;
         $employee->save();
