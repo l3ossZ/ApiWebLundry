@@ -186,10 +186,9 @@ class DeliveryTimeController extends Controller
     public function addDeliver(DeliveryTime $deliveryTime,Request $request){
         $deliveryTime->deliver=$request->get('deliver');
         $deliveryTime->save();
-        $order = Order::where($request->get("name",$request->get("orderName")))->first();
+        $order = Order::where('name',$request->get("orderName"))->first();
         $order->deliver=$request->get('deliver');
         $order->save();
-
         return response()->json([
             'success'=>true,
             'message'=>'add Deliver Complete '.$deliveryTime->id
