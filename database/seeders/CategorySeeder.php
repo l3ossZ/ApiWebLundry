@@ -59,13 +59,7 @@ class CategorySeeder extends Seeder
 
         $category = new Category();
         $category->service_rate_id=2;
-        $category->clothType="เสื้อยืดแขนสั้น";
-        $category->addOnPrice=0.00;
-        $category->save();
-
-        $category = new Category();
-        $category->service_rate_id=2;
-        $category->clothType="เสื้อยืดแขนยาว";
+        $category->clothType="เสื้อเชิ้ตแขนยาว";
         $category->addOnPrice=5.00;
         $category->save();
 
@@ -77,26 +71,26 @@ class CategorySeeder extends Seeder
 
         $category = new Category();
         $category->service_rate_id=2;
-        $category->clothType="เสื้อเชิ้ตแขนยาว";
+        $category->clothType="กางเกงขายาว";
         $category->addOnPrice=5.00;
         $category->save();
 
-
         $category = new Category();
         $category->service_rate_id=2;
-        $category->clothType="กาเกงขาสั้น";
+        $category->clothType="กางเกงขาสั้น";
         $category->addOnPrice=0.00;
         $category->save();
 
+
         $category = new Category();
         $category->service_rate_id=2;
-        $category->clothType="กาเกงขายาว";
-        $category->addOnPrice=5.00;
+        $category->clothType="การเกงยีนส์";
+        $category->addOnPrice=10.00;
         $category->save();
 
         $category = new Category();
         $category->service_rate_id=2;
-        $category->clothType="กาเกงยีนต์";
+        $category->clothType="กระโปรงยาว";
         $category->addOnPrice=10.00;
         $category->save();
 
@@ -108,26 +102,32 @@ class CategorySeeder extends Seeder
 
         $category = new Category();
         $category->service_rate_id=2;
-        $category->clothType="กระโปรงยาว";
-        $category->addOnPrice=5.00;
-        $category->save();
-
-        $category = new Category();
-        $category->service_rate_id=2;
         $category->clothType="ผ้าเช็ดตัว";
         $category->addOnPrice=5.00;
         $category->save();
 
         $category = new Category();
         $category->service_rate_id=2;
-        $category->clothType="เสื้อแจ๊คเก็ต";
+        $category->clothType="ถุงเท้า";
+        $category->addOnPrice= -10.00;
+        $category->save();
+
+        $category = new Category();
+        $category->service_rate_id=2;
+        $category->clothType="กางเกงใน";
+        $category->addOnPrice=-10.00;
+        $category->save();
+
+        $category = new Category();
+        $category->service_rate_id=2;
+        $category->clothType="เสื้อสตรี(Blouse)";
         $category->addOnPrice=25.00;
         $category->save();
 
         $category = new Category();
         $category->service_rate_id=2;
-        $category->clothType="ผ้าปูที่นอน";
-        $category->addOnPrice=45.00;
+        $category->clothType="เสื้อชั้นในสตรี(ฺBrassieres)";
+        $category->addOnPrice=-7.00;
         $category->save();
 
         $category = new Category();
@@ -141,12 +141,7 @@ class CategorySeeder extends Seeder
         $category->clothType="ผ้านวมเล็ก";
         $category->addOnPrice=0.00;
         $category->save();
-
-        $category = new Category();
-        $category->service_rate_id=2;
-        $category->clothType="ผ้านวมใหญ่";
-        $category->addOnPrice=75.00;
-        $category->save();
+        
 
         $category = new Category();
         $category->service_rate_id=2;

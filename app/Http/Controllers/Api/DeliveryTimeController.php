@@ -46,6 +46,17 @@ class DeliveryTimeController extends Controller
         $deliveryTime->job=$request->get('job');
         $deliveryTime->deliver=$request->get('deliver')??"ยังไม่ลงทะเบียน" ;
 
+        $order = Order::where('name',$deliveryTime->orderName)->first();
+        if($deliveryTime->job=="ส่งผ้า"){
+            $order->deli_date=$deliveryTime->date;
+            $order->deli_time=$deliveryTime->time;
+        }
+        else if ($deliveryTime->job == "รับผ้า"){
+            $order->pick_date=$deliveryTime->date;
+            $order->pick_time=$deliveryTime->time;
+        }
+        $order->save();
+
         if ($deliveryTime->save()) {
             return response()->json([
                 'success' => true,

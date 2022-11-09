@@ -360,7 +360,12 @@ class OrderController extends Controller
         $order->pick_time=$request->get('pick_time') ?? null;
         $order->address=$request->get('address');
         $order->pay_method=$request->get('pay_method') ?? "เงินสด";
-        $order->is_membership_or=$request->get('is_membership_or') ?? false;
+        if($order->pay_method=="สมาขิก"){
+            $order->is_membership_or=1;
+        }
+        else{
+            $order->is_membership_or=0;
+        }
         $employee=Employee::where('name','like','%'.$request->get('responder').'%')->first();
         $order->employee_id=$employee->id;
         $order->cus_phone=$userPhone;
@@ -976,8 +981,6 @@ class OrderController extends Controller
         $order->deli_time=$request->get('deli_time');
 
         $order->save();
-
-
         $jovv = "ส่งผ้า";
         $deliv = "ยังไม่ลงทะเบียน";
         $deliveryTime=new DeliveryTime();

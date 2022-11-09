@@ -19,25 +19,47 @@ class EmployeeSeeder extends Seeder
     {
         // Employee
         $employee = new Employee();
-        $employee->name="employee 1";
-        $employee->phone="0811585858";
-        $employee->email="employee@mail.com";
+        $employee->name="ภูบดี โรมินทร์";
+        $employee->phone="0896789567";
+        $employee->email="phubadee@mail.com";
         $employee->role="EMPLOYEE";
         $employee->address="69/12 ทรายทองนิเวศน์ ซอย 7 ท่าทราย อำเภอเมืองนนทบุรี นนทบุรี 11000";
         $employee->password=Hash::make("password");
-        $employee->ID_Card="1105255656891";
-        $employee->bank_account_number="1252585145";
-        $employee->bank_name="กรุงเทพ";
+        $employee->ID_Card="1102422034123";
+        $employee->bank_account_number="2394029323";
+        $employee->bank_name="กสิกรไทย";
         $employee->salary=18000.00;
         $employee->save();
 
         $user = new User() ;
-        $user->name="employee 1";
-        $user->email="employee@mail.com";
+        $user->name="ภูบดี โรมินทร์";
+        $user->email="phubadee@mail.com";
         $user->password=Hash::make("password");
         $user->role="EMPLOYEE";
         $user->realrole="EMPLOYEE";
-        $user->phone="0811585858";
+        $user->phone="0896789567";
+        $user->save() ;
+
+        $employee = new Employee();
+        $employee->name="";
+        $employee->phone="0896789567";
+        $employee->email="pakorn@mail.com";
+        $employee->role="EMPLOYEE";
+        $employee->address="69/12 ทรายทองนิเวศน์ ซอย 7 ท่าทราย อำเภอเมืองนนทบุรี นนทบุรี 11000";
+        $employee->password=Hash::make("password");
+        $employee->ID_Card="1102422034123";
+        $employee->bank_account_number="2394029323";
+        $employee->bank_name="กสิกรไทย";
+        $employee->salary=18000.00;
+        $employee->save();
+
+        $user = new User() ;
+        $user->name="Pakorn Phuna";
+        $user->email="pakorn@mail.com";
+        $user->password=Hash::make("password");
+        $user->role="EMPLOYEE";
+        $user->realrole="EMPLOYEE";
+        $user->phone="0896789567";
         $user->save() ;
 
         // Deliver
