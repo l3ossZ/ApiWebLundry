@@ -84,6 +84,7 @@ Route::put('/employees/changePassword',[EmployeeController::class,'changePasswor
 Route::post('/orders/getPreviewClothList',[OrderController::class,'getPreviewClothList']);
 Route::post('/orders/getReport',[OrderController::class,'getReport']);
 Route::post('/orders/getOrders',[OrderController::class,'getOrderWithAuth']);
+Route::post('/address/getAddress',[AddressController::class,'getAddressWithAuth']);
 
 
 //Route::get('/orders/getIncomeToday',[OrderController::class,'getIncomeToday']);

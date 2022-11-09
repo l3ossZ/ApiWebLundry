@@ -147,4 +147,11 @@ class AddressController extends Controller
             'message' => "Address {$name} delete failed"
         ], Response::HTTP_BAD_REQUEST);
     }
+
+    public function getAddressWithAuth(){
+        $user=auth()->user();
+        $userPhone=$user->phone;
+        $address=Address::where('cus_phone',$userPhone)->get();
+        return $address;
+    }
 }
