@@ -351,9 +351,7 @@ class OrderController extends Controller
     public function storeWithPhone(Request $request)
     {
         $userPhone=Auth::user()->phone;
-
         $order=new Order();
-
         $order->name="ORA"."-".(string)random_int(10000,99999);
         $order->service=$request->get('service');
         $order->pick_date=$request->get('pick_date') ?? null;
@@ -374,9 +372,7 @@ class OrderController extends Controller
         $order->responder=$notRegis;
         $order->deliver=$notRegis;
 
-
         if ($order->save()) {
-
             $customer=Customer::where('phone','like','%'.$userPhone.'%')->first();
             $order->customers()->attach($customer->id);
 
@@ -385,7 +381,6 @@ class OrderController extends Controller
                 'message' => 'Order created with id ' . $order->id,
                 'order_id' =>$order->id
             ],Response::HTTP_CREATED);
-
 
         }
         return response()->json([

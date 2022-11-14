@@ -19,34 +19,34 @@ class LaundrySeeder extends Seeder
     public function run()
     {
         $user = new User() ;
-        $user->name="Owner Name";
-        $user->email="owner@mail.com";
+        $user->name="Boy Min";
+        $user->email="boymin@mail.com";
         $user->password=Hash::make("password");
         $user->role="OWNER";
         $user->realrole="OWNER";
-        $user->phone="0624816611";
+        $user->phone="0855555555";
         $user->save() ;
 
         $employee = new Employee();
-        $employee->name="Owner Name";
-        $employee->phone="0624816611";
-        $employee->email="owner@mail.com";
+        $employee->name="Boy Min";
+        $employee->phone="0855555555";
+        $employee->email="boymin@mail.com";
         $employee->role="OWNER";
         $employee->address="21 ทรายทองนิเวศน์ ซอย 5 ท่าทราย อำเภอเมืองนนทบุรี นนทบุรี 11000";
         $employee->password=Hash::make("password");
-        $employee->ID_Card="1105255695859";
-        $employee->bank_account_number="1235856958";
+        $employee->ID_Card="1120200102031";
+        $employee->bank_account_number="1020140123";
         $employee->bank_name="กสิกร";
         $employee->salary=30000.00;
         $employee->save();
 
         $laundry = new Laundry();
-        $laundry->name="Matmi shop";
-        $laundry->phone="0291550580";
+        $laundry->name="Boy Laundry";
+        $laundry->phone="029155058";
         $laundry->owner="1";
-        $laundry->email="matmishop";
+        $laundry->email="mylaundryshopmail@gmail.com";
         $laundry->address="21 ทรายทองนิเวศน์ ซอย 5 ท่าทราย อำเภอเมืองนนทบุรี นนทบุรี 11000" ;
-        $laundry->lineId="maimeLine";
+        $laundry->lineId="boyLaundryLine";
         $laundry->workDay="0111111" ;
         $laundry->opentime="09:00";
         $laundry->closetime="20:00";

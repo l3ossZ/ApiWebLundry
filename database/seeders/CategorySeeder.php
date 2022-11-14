@@ -120,13 +120,13 @@ class CategorySeeder extends Seeder
 
         $category = new Category();
         $category->service_rate_id=2;
-        $category->clothType="เสื้อสตรี(Blouse)";
+        $category->clothType="เสื้อสตรี";
         $category->addOnPrice=25.00;
         $category->save();
 
         $category = new Category();
         $category->service_rate_id=2;
-        $category->clothType="เสื้อชั้นในสตรี(ฺBrassieres)";
+        $category->clothType="เสื้อชั้นในสตรี";
         $category->addOnPrice=-7.00;
         $category->save();
 
@@ -141,13 +141,33 @@ class CategorySeeder extends Seeder
         $category->clothType="ผ้านวมเล็ก";
         $category->addOnPrice=0.00;
         $category->save();
-        
+
 
         $category = new Category();
         $category->service_rate_id=2;
         $category->clothType="ผ้านวมใหญ่";
         $category->addOnPrice=135.00;
         $category->save();
+
+        $category = new Category();
+        $category->service_rate_id=2;
+        $category->clothType="ตุ๊กตาตัวใหญ่";
+        $category->addOnPrice=175.00;
+        $category->save();
+
+        $category = new Category();
+        $category->service_rate_id=2;
+        $category->clothType="ตุ๊กตาตัวกลาง";
+        $category->addOnPrice=125.00;
+        $category->save();
+
+        $category = new Category();
+        $category->service_rate_id=2;
+        $category->clothType="ตุ๊กตาตัวเล็ก";
+        $category->addOnPrice=85.00;
+        $category->save();
+
+
 
         // ซักแห้งประเภทผ้า base price = 80
         $category = new Category();
@@ -182,6 +202,37 @@ class CategorySeeder extends Seeder
 
         $category = new Category();
         $category->service_rate_id=3;
+        $category->clothType="เสื้อเชิ้ต";
+        $category->addOnPrice=0.00;
+        $category->save();
+
+        $category = new Category();
+        $category->service_rate_id=3;
+        $category->clothType="เสื้อยืด";
+        $category->addOnPrice=-30.00;
+        $category->save();
+
+        $category = new Category();
+        $category->service_rate_id=3;
+        $category->clothType="เสื้อกั๊ก";
+        $category->addOnPrice=-20.00;
+        $category->save();
+
+        $category = new Category();
+        $category->service_rate_id=3;
+        $category->clothType="เสื้อลำลอง";
+        $category->addOnPrice=-10.00;
+        $category->save();
+
+        $category = new Category();
+        $category->service_rate_id=3;
+        $category->clothType="กางเกง";
+        $category->addOnPrice=0.00;
+        $category->save();
+
+
+        $category = new Category();
+        $category->service_rate_id=3;
         $category->clothType="เนคไทด์";
         $category->addOnPrice=-50.00;
         $category->save();
@@ -192,10 +243,18 @@ class CategorySeeder extends Seeder
         $category->addOnPrice=-10.00;
         $category->save();
 
+
+
         $category = new Category();
         $category->service_rate_id=3;
         $category->clothType="กระโปรง";
         $category->addOnPrice=0.00;
+        $category->save();
+
+        $category = new Category();
+        $category->service_rate_id=3;
+        $category->clothType="กระโปรงพรีท";
+        $category->addOnPrice=220.00;
         $category->save();
 
         $category = new Category();
@@ -215,6 +274,31 @@ class CategorySeeder extends Seeder
         $category->clothType="ชุดรับปริญญา";
         $category->addOnPrice=120.00;
         $category->save();
+
+        $category = new Category();
+        $category->service_rate_id=3;
+        $category->clothType="สเว็ตเตอร์";
+        $category->addOnPrice=120.00;
+        $category->save();
+
+        $category = new Category();
+        $category->service_rate_id=3;
+        $category->clothType="ผ้าพันคอ";
+        $category->addOnPrice=-20.00;
+        $category->save();
+
+        $category = new Category();
+        $category->service_rate_id=3;
+        $category->clothType="ผ้านวมผืนใหญ่";
+        $category->addOnPrice=170.00;
+        $category->save();
+
+        $category = new Category();
+        $category->service_rate_id=3;
+        $category->clothType="ผ้าพันคอ";
+        $category->addOnPrice=120.00;
+        $category->save();
+
 
         // รีด base price = 10
 

@@ -16,15 +16,21 @@ class MemberPackageSeeder extends Seeder
     public function run()
     {
         $memberpackage = new MemberPackage();
-        $memberpackage->service="ซักรีด&ซักอบ" ;
-        $memberpackage->quantity=70 ;
-        $memberpackage->price=800 ;
+        $memberpackage->service="ซักอบ" ;
+        $memberpackage->quantity=50 ;
+        $memberpackage->price=500 ;
         $memberpackage->save();
 
         $memberpackage = new MemberPackage();
-        $memberpackage->service="ซักรีด&ซักอบ" ;
-        $memberpackage->quantity=100 ;
-        $memberpackage->price=1000 ;
+        $memberpackage->service="ซักรีด" ;
+        $memberpackage->quantity=50 ;
+        $memberpackage->price=700 ;
+        $memberpackage->save();
+
+        $memberpackage = new MemberPackage();
+        $memberpackage->service="รีด" ;
+        $memberpackage->quantity=50 ;
+        $memberpackage->price=500 ;
         $memberpackage->save();
 
         // $memberpackage = new MemberPackage();
