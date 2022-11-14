@@ -50,11 +50,11 @@ class OrderController extends Controller
         $order->service=$request->get('service');
         $order->name="ORS"."-".(string)random_int(10000,99999);
         $order->pick_date=$request->get('pick_date') ?? null;
-        $order->pick_time=$request->get('pick_time') ?? null;
+        $order->pick_time=$request->get('pick_time') ?? "";
         $order->deli_date=$request->get('deli_date') ?? null;
-        $order->deli_time=$request->get('deli_time') ?? null;
+        $order->deli_time=$request->get('deli_time') ?? "";
         $order->address=$request->get('address') ?? null;
-        $order->status="order in";
+        $order->status="เพิ่มรายการ";
         $order->responder=$request->get('responder');
         $notRegis = "ยังไม่ลงทะเบียน" ;
         $order->deliver=$notRegis;
@@ -68,7 +68,6 @@ class OrderController extends Controller
         $order->cus_phone=$request->get('cus_phone');
         $employee=Employee::where('name','like','%'.$request->get('responder').'%')->first();
         $order->employee_id=$employee->id;
-
 
         if ($order->save()) {
             $customer=Customer::where('phone','like','%'.$request->get('cus_phone').'%')->first();
@@ -982,6 +981,7 @@ class OrderController extends Controller
         $deliveryTime->date= $order->deli_date;
         $deliveryTime->time= $order->deli_time;
         $deliveryTime->orderName= $order->name;
+        $deliveryTime->address=$order->address;
         $deliveryTime->job= $jovv;
         $deliveryTime->deliver=$deliv;
 
@@ -993,7 +993,7 @@ class OrderController extends Controller
         $employee=Employee::where('phone','like','%'.$employeePhone.'%')->first();
         $order->employee_id=$employee->id;
         $order->responder=$employee->name;
-        $order->status='order-confirm';
+        $order->status='เพิ่มรายการ';
 
 //        $order->pick_date=$request->get('pick_date') ?? null;
 //        $order->pick_time=$request->get('pick_time') ?? null;
@@ -1091,10 +1091,10 @@ class OrderController extends Controller
 
 
     public function getDashboardData(){
-        $orderComplete = Order::where('status','Complete');
+        $orderComplete = Order::where('status','เสร็จสิ้น');
         $order = $this->getTodayOrder();
-        $income = $order->sum('total');
-        $inprogress = Order::where('status','in progress');
+        $income = $order->where('status','เสร็จสิ้น')->sum('total');
+        $inprogress = Order::where('status','เพิ่มรายการ')->orWhere('status','กำลังดำเนินการ')->orWhere('status','ส่งผ้า')->orWhere('status',' รับผ้า');
         $notPay = Order::where('pay_status',false);
         $customerall =Customer::all();
         $customerMem=Customer::where('isMembership',1);
@@ -1116,7 +1116,20 @@ class OrderController extends Controller
         return $orders;
     }
 
-    
+    public function updateStatus(Order $order,Request $request){
+        $order->status=$request->get('status');
+        if($order->save()){
+            return response()->json([
+                'message'=>'update status complete',
+                'status'=>$order->status
+            ],Response::HTTP_OK);
+        }
+        return response()->json([
+            'message'=>'update status failed'
+        ]);
+    }
+
+
 
 
 

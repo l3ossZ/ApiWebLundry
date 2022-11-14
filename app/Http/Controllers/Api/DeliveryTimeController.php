@@ -45,6 +45,7 @@ class DeliveryTimeController extends Controller
         $deliveryTime->orderName=$request->get('orderName');
         $deliveryTime->job=$request->get('job');
         $deliveryTime->deliver=$request->get('deliver')??"ยังไม่ลงทะเบียน" ;
+        $deliveryTime->address=$request->get('address');
 
         $order = Order::where('name',$deliveryTime->orderName)->first();
         if($deliveryTime->job=="ส่งผ้า"){
@@ -100,6 +101,7 @@ class DeliveryTimeController extends Controller
         $deliveryTime->orderName=$request->get('orderName');
         $deliveryTime->job=$request->get('job');
         $deliveryTime->deliver=$request->get('deliver');
+        $deliveryTime->address=$request->get('address');
         if ($deliveryTime->save()) {
             return response()->json([
                 'success' => true,
@@ -186,7 +188,7 @@ class DeliveryTimeController extends Controller
     public function addDeliver(DeliveryTime $deliveryTime,Request $request){
         $deliveryTime->deliver=$request->get('deliver');
         $deliveryTime->save();
-        
+
         $order = Order::where('name',$request->get("orderName"))->first();
         $order->deliver=$deliveryTime->deliver;
         $order->save();
