@@ -41,7 +41,7 @@ class EmployeeSeeder extends Seeder
         $user->save() ;
 
         $employee = new Employee();
-        $employee->name="";
+        $employee->name="Pakorn Phuna";
         $employee->phone="0896781568";
         $employee->email="pakorn@mail.com";
         $employee->role="EMPLOYEE";
@@ -64,9 +64,9 @@ class EmployeeSeeder extends Seeder
 
         // Deliver
         $employee = new Employee();
-        $employee->name="deliver 1";
+        $employee->name="ชัชชาย จัทร์เพชร์";
         $employee->phone="0816995855";
-        $employee->email="deliver@mail.com";
+        $employee->email="chatchai@mail.com";
         $employee->role="DELIVER";
         $employee->address="2 ซอย รณสิทธิพิชัย 8/3 ตำบล ตลาดขวัญ อำเภอเมืองนนทบุรี นนทบุรี 11000";
         $employee->password=Hash::make("password");
@@ -77,7 +77,7 @@ class EmployeeSeeder extends Seeder
         $employee->save();
 
         $user = new User() ;
-        $user->name="deliver 1";
+        $user->name="ชัชชาย จัทร์เพชร์";
         $user->email="deliver@mail.com";
         $user->password=Hash::make("password");
         $user->role="DELIVER";

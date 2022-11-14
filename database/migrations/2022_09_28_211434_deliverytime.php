@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('orderName')->default("");
             $table->string('deliver')->nullable();
             $table->string('job');
+            $table->string('address');
             $table->timestamps();
         });
     }
