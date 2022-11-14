@@ -53,7 +53,7 @@ class OrderController extends Controller
         $order->pick_time=$request->get('pick_time') ?? "";
         $order->deli_date=$request->get('deli_date') ?? null;
         $order->deli_time=$request->get('deli_time') ?? "";
-        $order->address=$request->get('address') ?? null;
+        $order->address=$request->get('address') ?? "";
         $order->status="เพิ่มรายการ";
         $order->responder=$request->get('responder');
         $notRegis = "ยังไม่ลงทะเบียน" ;
@@ -65,6 +65,7 @@ class OrderController extends Controller
         $order->pick_ser_charge=$request->get('pick_ser_charge') ?? 0;
         $order->deli_ser_charge=$request->get('deli_ser_charge') ?? 0;
         $order->is_membership_or=$request->get('is_membership_or') ?? false;
+        $order->pay_status=$request->get('pay_status') ?? 0;
         $order->cus_phone=$request->get('cus_phone');
         $employee=Employee::where('name','like','%'.$request->get('responder').'%')->first();
         $order->employee_id=$employee->id;

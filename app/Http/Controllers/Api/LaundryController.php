@@ -109,15 +109,15 @@ class LaundryController extends Controller
      */
     public function update(Request $request, Laundry $laundry)
     {
-        if($request->has('name')) $laundry->name=$request->get('name');
-        if($request->has('phone')) $laundry->phone=$request->get('phone');
+        if($request->has('shopName')) $laundry->name=$request->get('shopName');
+        if($request->has('shopPhone')) $laundry->phone=$request->get('shopPhone');
         if($request->has('owner')) $laundry->owner=$request->get('owner');
-        if($request->has('email')) $laundry->email=$request->get('email');
-        if($request->has('address')) $laundry->address=$request->get('address');
+        if($request->has('shopEmail')) $laundry->email=$request->get('shopEmail');
+        if($request->has('shopAddress')) $laundry->address=$request->get('shopAddress');
+        if($request->has('workDay')) $laundry->workDay=$request->get('workDay') ;
         if($request->has('lineId')) $laundry->lineId=$request->get('lineId');
         if($request->has('opentime')) $laundry->opentime=$request->get('opentime');
         if($request->has('closetime')) $laundry->closetime=$request->get('closetime');
-
         if ($laundry->save()) {
             return response()->json([
                 'success' => true,
