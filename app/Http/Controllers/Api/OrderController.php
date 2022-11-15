@@ -357,6 +357,7 @@ class OrderController extends Controller
         $order->pick_date=$request->get('pick_date') ?? null;
         $order->pick_time=$request->get('pick_time') ?? null;
         $order->address=$request->get('address');
+        $order->status =$request->get('status');
         $order->pay_method=$request->get('pay_method') ?? "เงินสด";
         if($order->pay_method=="สมาขิก"){
             $order->is_membership_or=1;
@@ -994,7 +995,7 @@ class OrderController extends Controller
         $employee=Employee::where('phone','like','%'.$employeePhone.'%')->first();
         $order->employee_id=$employee->id;
         $order->responder=$employee->name;
-        $order->status='เพิ่มรายการ';
+        $order->status='ยืนยันนัดหมาย';
 
 //        $order->pick_date=$request->get('pick_date') ?? null;
 //        $order->pick_time=$request->get('pick_time') ?? null;
