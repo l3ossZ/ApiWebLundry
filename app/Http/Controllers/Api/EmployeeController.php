@@ -243,7 +243,7 @@ class EmployeeController extends Controller
     {
         //
         $phone=$employee->phone;
-        $user=User::where('phone','like','%'.$phone.'%')->first()->delete();
+        $user=User::where('phone','like','%'.$phone.'%')->first();
         if($employee->delete()){
             $user->delete();
             return response()->json([
