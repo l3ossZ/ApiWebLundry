@@ -585,6 +585,7 @@ class OrderController extends Controller
                 $delitime = new DeliveryTime();
                 $delitime->date=$order->deli_date;
                 $delitime->time=$order->deli_time;
+                $delitime->address=$order->address;
                 $delitime->orderName=$order->name;
                 $delitime->deliver=$deliver;
                 $order->deliver=$deliver;
@@ -1092,7 +1093,7 @@ class OrderController extends Controller
 //    }
 
 
-    public function getDashboardData(){
+        public function getDashboardData(){
         $orderComplete = Order::where('status','เสร็จสิ้น');
         $order = $this->getTodayOrder();
         $income = $order->where('status','เสร็จสิ้น')->sum('total');
