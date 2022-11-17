@@ -72,6 +72,7 @@ class LaundryController extends Controller
         $laundry->email=$request->get('shopEmail');
         $laundry->opentime=$request->get('opentime');
         $laundry->closetime=$request->get('closetime');
+        $laundry->email_pwd=$request->get('email_pwd');
 
 
         if ($laundry->save()) {
@@ -118,6 +119,7 @@ class LaundryController extends Controller
         if($request->has('lineId')) $laundry->lineId=$request->get('lineId');
         if($request->has('opentime')) $laundry->opentime=$request->get('opentime');
         if($request->has('closetime')) $laundry->closetime=$request->get('closetime');
+        if($request->has('email_pwd')) $laundry->email_pwd=$request->get('email_pwd');
         if ($laundry->save()) {
             return response()->json([
                 'success' => true,
