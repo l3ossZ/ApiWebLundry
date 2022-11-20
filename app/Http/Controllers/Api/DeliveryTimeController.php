@@ -198,6 +198,11 @@ class DeliveryTimeController extends Controller
         ]);
     }
 
+    public function getDeliveryListToday(){
+        $deli = DeliveryTime::whereDate('date',Carbon::tomorrow())->get();
+        return $deli;
+    }
+
 //    public function editDeliverTime(DeliveryTime $deliveryTime, Request $request){
 //        $cancel = "cancel";
 //        $deliveryTime->job=$cancel;

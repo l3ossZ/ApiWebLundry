@@ -100,6 +100,7 @@ Route::put('/delivery-time/getNumOfWork',[DeliveryTimeController::class,'getNumO
 Route::put('/delivery-time/getAvailableInDateTime',[DeliveryTimeController::class,'getAvailableInDateTime']);
 Route::put('/delivery-time/{deliveryTime}/addDeliver',[DeliveryTimeController::class,'addDeliver']);
 Route::put('/delivery-time/{deliveryTime}/cancelDelivery',[DeliveryTimeController::class,'cancelDelivery']);
+Route::get('/delivery-time/getDeliveryListToday',[DeliveryTimeController::class,'getDeliveryListToday']);
 //Route::put('delivery-time/{deliveryTIme}/editDeliverTime',[DeliveryTimeController::class,'editDeliverTime']);
 Route::apiResource('/orders',ApiOrderController::class);
 Route::apiResource('/customers',CustomerController::class);
