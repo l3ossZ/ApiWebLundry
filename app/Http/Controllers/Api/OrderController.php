@@ -1008,7 +1008,7 @@ class OrderController extends Controller
         $deliveryTime->orderName= $order->name;
         $deliveryTime->job= $jovv;
         $deliveryTime->deliver=$deliv;
-
+        $deliveryTime->address= $order->address;
         $deliveryTime->save();
 
         if($order->save()){

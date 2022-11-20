@@ -202,6 +202,7 @@ class CustomerController extends Controller
     {
         //
         $user=User::where('name','like','%'.$customer->name.'%')->first();
+        $oldPhone = $user->phone ;
 
         if($request->has('name')) $customer->name=$request->get('name');
         if($request->has('phone')) $customer->phone=$request->get('phone');
@@ -215,15 +216,27 @@ class CustomerController extends Controller
         if($request->has('email')) $user->email=$request->get('email');
         $user->realrole="CUSTOMER";
         if($request->has('pwd')) $user->password=bcrypt($request->get('pwd'));
+        $orders = Order::where('cus_phone');
+        $addresses = Address::where('cus_phone',$oldPhone);
+        if($request->has('phone')){
+            foreach($orders as $order) {
+                $order->cus_phone=$customer->phone;
+                $order->save();
+            }
+            foreach($addresses as $address) {
+                $address->cus_phone=$customer->phone;
+                $address->save();
+            }
+        }
+
+
         $user->save();
-
-
-
         if ($customer->save()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Customer updated with id ' . $customer->id,
-                'customer_id' =>$customer->id
+                'customer_id' =>$customer->id,
+                'order' => $orders
             ],Response::HTTP_OK);
         }
         return response()->json([
