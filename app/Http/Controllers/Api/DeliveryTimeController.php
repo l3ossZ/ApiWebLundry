@@ -199,7 +199,7 @@ class DeliveryTimeController extends Controller
     }
 
     public function getDeliveryListToday(){
-        $deli = DeliveryTime::whereDate('date',Carbon::tomorrow())->get();
+        $deli = DeliveryTime::whereDate('date',Carbon::today())->get();
         return $deli;
     }
 
