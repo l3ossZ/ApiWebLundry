@@ -14,7 +14,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use PHPOpenSourceSaver\JWTAuth\Claims\Custom;
 
-
+use function GuzzleHttp\Promise\all;
 
 class CustomerController extends Controller
 {
@@ -89,7 +89,7 @@ class CustomerController extends Controller
         $customer->name=$request->get('name');
         $customer->phone=$request->get('phone');
         $customer->email=$request->get('email');
-        $customer->email=$request->get('email')??null;
+        // $customer->email=$request->get('email')??null;
         $customer->pwd=$request->get('pwd');
         $customer->isMembership=$request->get('isMembership')??false;
         $customer->memService=$request->get('memService')??"-";
@@ -216,8 +216,8 @@ class CustomerController extends Controller
         if($request->has('email')) $user->email=$request->get('email');
         $user->realrole="CUSTOMER";
         if($request->has('pwd')) $user->password=bcrypt($request->get('pwd'));
-        $orders = Order::where('cus_phone');
-        $addresses = Address::where('cus_phone',$oldPhone);
+        $orders = Order::where('cus_phone',$oldPhone)->get();
+        $addresses = Address::where('cus_phone',$oldPhone)->get();
         if($request->has('phone')){
             foreach($orders as $order) {
                 $order->cus_phone=$customer->phone;
@@ -236,7 +236,8 @@ class CustomerController extends Controller
                 'success' => true,
                 'message' => 'Customer updated with id ' . $customer->id,
                 'customer_id' =>$customer->id,
-                'order' => $orders
+                'order' => $orders,
+                'addresses'=>$addresses
             ],Response::HTTP_OK);
         }
         return response()->json([
