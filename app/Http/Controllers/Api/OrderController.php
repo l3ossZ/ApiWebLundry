@@ -162,7 +162,7 @@ class OrderController extends Controller
     }
 
     public function cancelOrder(Order $order){
-        $cancel = "cancel";
+        $cancel = "ยกเลิก";
         $order->status =  $cancel;
         if($order->save()){
             return response()->json([
@@ -171,7 +171,6 @@ class OrderController extends Controller
             ],Response::HTTP_CREATED);
         }
         return response()->json([
-
             'success' => false,
             'message' => 'Cancel Order failed'
         ], Response::HTTP_BAD_REQUEST);
@@ -996,7 +995,7 @@ class OrderController extends Controller
         $employee=Employee::where('phone','like','%'.$employeePhone.'%')->first();
         $order->employee_id=$employee->id;
         $order->responder=$employee->name;
-        $order->status='ยืนยันนัดหมาย';
+        $order->status='ยืนยันการนัดหมาย';
 
 //        $order->pick_date=$request->get('pick_date') ?? null;
 //        $order->pick_time=$request->get('pick_time') ?? null;
