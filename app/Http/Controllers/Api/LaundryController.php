@@ -120,6 +120,7 @@ class LaundryController extends Controller
         if($request->has('opentime')) $laundry->opentime=$request->get('opentime');
         if($request->has('closetime')) $laundry->closetime=$request->get('closetime');
         if($request->has('email_pwd')) $laundry->email_pwd=$request->get('email_pwd');
+        if($request->has('numOfWork')) $laundry->numOfWork=$request->get('numOfWork');
         if ($laundry->save()) {
             return response()->json([
                 'success' => true,
