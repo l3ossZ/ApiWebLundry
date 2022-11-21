@@ -287,7 +287,7 @@ class CustomerController extends Controller
     }
 
     public function getCustomerAddress(Customer $customer){
-        $address=Address::where('cus_phone','like','%'.$customer->phone.'%')->get();
+        $address=Address::where('cus_phone','like','%'.$customer->phone.'%')->get()->first();
         return $address;
     }
 

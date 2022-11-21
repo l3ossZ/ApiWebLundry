@@ -261,13 +261,19 @@ class EmployeeController extends Controller
         $employee = Employee::where('ID_Card','like','%'.$request->get('ID_Card').'%')->first();
         if($request->get('ID_Card') == $employee->ID_Card){
             $user=User::where('email','like','%'.$employee->email.'%')->first();
-            if($request->has('password')) $employee->password=bcrypt($request->get('password'));
-            if($request->has('password')) $user->password=bcrypt($request->get('password'));
+            $pwd = "";
+            if($request->has('password')){
+                $pwd = bcrypt($request->get('password'));
+                $employee->password = $pwd;
+                $user->password = $pwd;
+            }
+//            if($request->has('password')) $user->password=bcrypt($request->get('password'));
             $user->save();
             if ($employee->save()) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Change password Complete' . $employee->id,
+                    'employee'=> $employee,
                     'employee_id' =>$employee->id
                 ],Response::HTTP_OK);
             }
